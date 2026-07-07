@@ -1,0 +1,1247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Studio Nine">
+<title>Studio Nine — Production HQ</title>
+</head>
+<body>
+<style>
+  :root {
+    --ink-950: #08080d;
+    --ink-900: #0b0b12;
+    --ink-850: #101019;
+    --ink-800: #16161f;
+    --surface: rgba(255, 255, 255, 0.04);
+    --surface-2: rgba(255, 255, 255, 0.065);
+    --surface-3: rgba(255, 255, 255, 0.03);
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(167, 139, 250, 0.35);
+    --accent-300: #c4b5fd;
+    --accent-400: #a78bfa;
+    --accent-500: #8b5cf6;
+    --accent-600: #7c3aed;
+    --fuchsia: #e879f9;
+    --emerald: #34d399;
+    --amber: #fbbf24;
+    --sky: #38bdf8;
+    --rose: #fb7185;
+    --text: #e4e4e7;
+    --text-dim: #a1a1aa;
+    --text-faint: #71717a;
+    --text-ghost: #52525b;
+    --white: #ffffff;
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --tab-h: 78px;
+    color-scheme: dark;
+  }
+
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    background: #050509;
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+      Roboto, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .phone {
+    position: relative;
+    max-width: 460px;
+    margin: 0 auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background:
+      radial-gradient(38rem 38rem at 90% -8%, rgba(139, 92, 246, 0.14), transparent 60%),
+      radial-gradient(32rem 32rem at -10% 108%, rgba(232, 121, 249, 0.09), transparent 55%),
+      var(--ink-900);
+    overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03);
+  }
+
+  .scroll {
+    height: 100vh;
+    height: 100dvh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: max(20px, env(safe-area-inset-top)) 18px
+      calc(var(--tab-h) + 28px) 18px;
+  }
+  .scroll::-webkit-scrollbar {
+    width: 0;
+  }
+
+  .view {
+    animation: fade 0.22s var(--ease-out) both;
+  }
+  @keyframes fade {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* Header */
+  .pg-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .pg-title {
+    font-size: 27px;
+    font-weight: 800;
+    letter-spacing: -0.6px;
+    color: var(--white);
+    margin: 0;
+    text-wrap: balance;
+  }
+  .pg-sub {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin: 4px 0 0;
+  }
+  .accent {
+    background: linear-gradient(100deg, var(--accent-300), var(--fuchsia));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 16px;
+  }
+  .card + .card,
+  .stack > * + * {
+    margin-top: 12px;
+  }
+  .stack {
+    display: block;
+  }
+
+  /* Stat tiles */
+  .tiles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .tile .chip-ico {
+    width: 40px;
+    height: 40px;
+    border-radius: 13px;
+    display: grid;
+    place-items: center;
+  }
+  .tile .val {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--white);
+    margin-top: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  .tile .lbl {
+    font-size: 12.5px;
+    color: var(--text-dim);
+    margin-top: 3px;
+  }
+  .tile .sub {
+    font-size: 11px;
+    color: var(--text-faint);
+    margin-top: 6px;
+  }
+
+  /* Section header */
+  .sec-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  .sec-head .left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--white);
+  }
+  .sec-head .left svg {
+    color: var(--accent-300);
+  }
+  .view-all {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-weight: 600;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  /* Bars */
+  .barrow {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .barrow .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .barrow .name {
+    font-size: 13px;
+    color: var(--text-dim);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .barrow .num {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent-300);
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+  }
+  .track {
+    height: 9px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+  }
+  .fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent-500), var(--fuchsia));
+    transform-origin: left;
+    animation: grow 0.55s var(--ease-out) both;
+  }
+  @keyframes grow {
+    from {
+      transform: scaleX(0);
+    }
+  }
+
+  /* Badges */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid;
+    white-space: nowrap;
+  }
+
+  /* rows */
+  .mini-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    background: var(--surface-3);
+    border-radius: 12px;
+    padding: 10px 12px;
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-400);
+    flex-shrink: 0;
+  }
+  .mini-row .txt {
+    font-size: 13px;
+    color: var(--text);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Catalog */
+  .rel {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+  }
+  .cover {
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    flex-shrink: 0;
+    box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.6);
+  }
+  .rel .meta {
+    flex: 1;
+    min-width: 0;
+  }
+  .rel .t-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .rel .name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--white);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .rel .date {
+    font-size: 12px;
+    color: var(--text-faint);
+    margin-top: 2px;
+  }
+  .rel .streams {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--accent-300);
+    margin-top: 6px;
+    font-variant-numeric: tabular-nums;
+  }
+  .rel .streams span {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-faint);
+  }
+  .row-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  /* hero total */
+  .hero {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .hero .ico {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: rgba(139, 92, 246, 0.14);
+    display: grid;
+    place-items: center;
+    color: var(--accent-300);
+  }
+  .hero .lbl {
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .hero .big {
+    font-size: 27px;
+    font-weight: 800;
+    letter-spacing: -0.6px;
+    color: var(--white);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* list (income) */
+  .list .item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 15px;
+  }
+  .list .item + .item {
+    border-top: 1px solid var(--border);
+  }
+  .list .item .grow {
+    flex: 1;
+    min-width: 0;
+  }
+  .list .item .note {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .list .item .amt {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--emerald);
+    font-variant-numeric: tabular-nums;
+  }
+  .flex {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .between {
+    justify-content: space-between;
+  }
+  .wrap {
+    flex-wrap: wrap;
+  }
+
+  /* reminders */
+  .rem {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 13px 15px;
+  }
+  .rem + .rem {
+    border-top: 1px solid var(--border);
+  }
+  .check {
+    width: 24px;
+    height: 24px;
+    border-radius: 7px;
+    border: 1.5px solid var(--text-ghost);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    cursor: pointer;
+    background: none;
+    transition: all 0.15s var(--ease-out);
+    color: transparent;
+  }
+  .check.done {
+    background: var(--accent-500);
+    border-color: var(--accent-500);
+    color: #fff;
+  }
+  .rem .txt {
+    flex: 1;
+    font-size: 14px;
+    color: var(--text);
+  }
+  .rem .txt.done {
+    color: var(--text-faint);
+    text-decoration: line-through;
+  }
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-ghost);
+    margin: 22px 4px 8px;
+  }
+
+  /* travel */
+  .trip .purpose {
+    font-size: 13px;
+    color: var(--accent-300);
+    margin-top: 4px;
+  }
+  .trip .dates {
+    font-size: 12px;
+    color: var(--text-faint);
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .trip .notes {
+    margin-top: 12px;
+    background: var(--surface-3);
+    border-radius: 12px;
+    padding: 11px 12px;
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+  .trip .name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  /* empty */
+  .empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 52px 24px;
+    border: 1px dashed var(--border);
+    border-radius: 20px;
+  }
+  .empty .ico {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: var(--surface-2);
+    display: grid;
+    place-items: center;
+    color: var(--text-faint);
+    margin-bottom: 12px;
+  }
+  .empty .et {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .empty .eh {
+    font-size: 13px;
+    color: var(--text-faint);
+    margin-top: 6px;
+    max-width: 280px;
+    line-height: 1.5;
+  }
+
+  /* buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border: 0;
+    border-radius: 13px;
+    font-weight: 700;
+    font-size: 14px;
+    font-family: inherit;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: transform 0.13s var(--ease-out), background 0.15s var(--ease-out),
+      opacity 0.15s var(--ease-out);
+  }
+  .btn:active {
+    transform: scale(0.96);
+  }
+  .btn-primary {
+    background: linear-gradient(100deg, var(--accent-500), var(--accent-600));
+    color: #fff;
+    box-shadow: 0 8px 20px -10px rgba(124, 58, 237, 0.8);
+  }
+  .btn-primary:hover {
+    background: linear-gradient(100deg, var(--accent-400), var(--accent-500));
+  }
+  .btn-ghost {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .btn-sm {
+    padding: 8px 13px;
+    font-size: 13px;
+  }
+  .icon-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: none;
+    border: 0;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, transform 0.13s var(--ease-out);
+  }
+  .icon-btn:active {
+    transform: scale(0.9);
+  }
+  .icon-btn:hover {
+    background: var(--surface-2);
+    color: var(--white);
+  }
+  .icon-btn.danger:hover {
+    background: rgba(251, 113, 133, 0.15);
+    color: var(--rose);
+  }
+
+  /* Tab bar */
+  .tabbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-width: 460px;
+    margin: 0 auto;
+    height: var(--tab-h);
+    padding-bottom: env(safe-area-inset-bottom);
+    background: rgba(16, 16, 25, 0.86);
+    backdrop-filter: blur(16px);
+    border-top: 1px solid var(--border);
+    display: flex;
+    z-index: 30;
+  }
+  .tabbar button {
+    flex: 1;
+    background: none;
+    border: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    color: var(--text-faint);
+    font-size: 10.5px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    padding-top: 10px;
+    transition: color 0.15s;
+    position: relative;
+  }
+  .tabbar button.active {
+    color: var(--accent-300);
+  }
+  .tabbar button .badge-dot {
+    position: absolute;
+    top: 8px;
+    margin-left: 20px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: var(--accent-500);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+  }
+
+  /* Modal / bottom sheet */
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(6, 6, 10, 0.72);
+    backdrop-filter: blur(3px);
+    z-index: 40;
+    animation: fade 0.18s var(--ease-out) both;
+  }
+  .sheet {
+    position: fixed;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 460px;
+    background: var(--ink-850);
+    border: 1px solid var(--border);
+    border-bottom: 0;
+    border-radius: 24px 24px 0 0;
+    padding: 10px 20px calc(24px + env(safe-area-inset-bottom));
+    z-index: 41;
+    max-height: 90vh;
+    max-height: 90dvh;
+    overflow-y: auto;
+    animation: slideup 0.26s var(--ease-out) both;
+  }
+  @keyframes slideup {
+    from {
+      transform: translate(-50%, 100%);
+    }
+    to {
+      transform: translate(-50%, 0);
+    }
+  }
+  .grabber {
+    width: 40px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.15);
+    margin: 4px auto 16px;
+  }
+  .sheet h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--white);
+    margin: 0 0 18px;
+  }
+  .field {
+    margin-bottom: 16px;
+  }
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-dim);
+    margin-bottom: 7px;
+  }
+  .input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 11px 13px;
+    color: var(--white);
+    font-size: 15px;
+    font-family: inherit;
+    transition: border-color 0.15s;
+  }
+  .input:focus {
+    outline: none;
+    border-color: var(--border-strong);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.18);
+  }
+  textarea.input {
+    min-height: 74px;
+    resize: vertical;
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .chip {
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    padding: 7px 13px;
+    cursor: pointer;
+    transition: all 0.14s var(--ease-out);
+  }
+  .chip.active {
+    background: var(--accent-500);
+    border-color: var(--accent-500);
+    color: #fff;
+  }
+  .swatches {
+    display: flex;
+    gap: 10px;
+  }
+  .swatch {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: transform 0.13s var(--ease-out);
+  }
+  .swatch:active {
+    transform: scale(1.12);
+  }
+  .swatch.active {
+    border-color: var(--white);
+  }
+  .date-quick {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+  .date-quick .prev {
+    font-size: 12px;
+    color: var(--text-faint);
+  }
+  .date-quick .qs {
+    display: flex;
+    gap: 6px;
+  }
+  .qbtn {
+    background: var(--surface-2);
+    border: 0;
+    color: var(--accent-300);
+    font-size: 12px;
+    font-weight: 600;
+    font-family: inherit;
+    border-radius: 999px;
+    padding: 4px 10px;
+    cursor: pointer;
+  }
+  .sheet-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .muted {
+    color: var(--text-faint);
+    font-size: 13px;
+    padding: 8px 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+
+<div class="phone">
+  <div class="scroll" id="scroll">
+    <div id="app"></div>
+  </div>
+  <nav class="tabbar" id="tabbar"></nav>
+</div>
+<div id="modal-root"></div>
+
+<script>
+  (function () {
+    'use strict';
+
+    /* ---------- icons (inline lucide-style) ---------- */
+    var IC = {
+      home: '<path d="M3 9.5 12 3l9 6.5"/><path d="M5 10v10h14V10"/>',
+      disc: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/><path d="M14 10a3 3 0 0 0-2-2M10 14a3 3 0 0 0 2 2"/>',
+      wallet: '<path d="M3 7a2 2 0 0 1 2-2h13v3"/><path d="M3 7v10a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1H5"/><circle cx="16.5" cy="12.5" r="1.2"/>',
+      list: '<path d="M4 6l1.5 1.5L8 5"/><path d="M4 12l1.5 1.5L8 11"/><path d="M4 18l1.5 1.5L8 17"/><path d="M11 6h9M11 12h9M11 18h9"/>',
+      plane: '<path d="M10.2 3.5a1.4 1.4 0 0 1 2.6 0l1.3 6 5.4 3.2a1 1 0 0 1 .5.9v1.1l-6-1.6-1 4 1.8 1.4v1l-3.5-1-3.5 1v-1l1.8-1.4-1-4-6 1.6v-1.1a1 1 0 0 1 .5-.9L8.9 9.5z"/>',
+      plus: '<path d="M12 5v14M5 12h14"/>',
+      trash: '<path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M6 7l1 13h10l1-13"/>',
+      pencil: '<path d="M16.5 4.5l3 3L8 19l-4 1 1-4z"/>',
+      check: '<path d="M5 12.5l4.5 4.5L19 6.5"/>',
+      play: '<path d="M7 5.5v13l11-6.5z"/>',
+      pin: '<path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+      cal: '<rect x="3.5" y="5" width="17" height="16" rx="2.5"/><path d="M3.5 9.5h17M8 3.5v3M16 3.5v3"/>',
+      trend: '<path d="M4 16l5-5 3 3 6-7"/><path d="M15 7h4v4"/>',
+    };
+    function icon(name, size, color, sw) {
+      size = size || 20;
+      return (
+        '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="' +
+        (color || 'currentColor') + '" stroke-width="' + (sw || 2) +
+        '" stroke-linecap="round" stroke-linejoin="round">' + IC[name] + '</svg>'
+      );
+    }
+
+    /* ---------- helpers ---------- */
+    function uid() { return 'id-' + Math.random().toString(36).slice(2) + Date.now().toString(36); }
+    function nf(n) { return new Intl.NumberFormat('en-US').format(Number(n) || 0); }
+    function compact(n) { return new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(Number(n) || 0); }
+    function money(n) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(Number(n) || 0); }
+    function todayISO() { return new Date().toISOString().slice(0, 10); }
+    function addDays(iso, d) { var x = new Date((iso || todayISO()) + 'T00:00:00'); x.setDate(x.getDate() + d); return x.toISOString().slice(0, 10); }
+    function fmtDate(iso) {
+      if (!iso) return '—';
+      var d = new Date(iso.length === 10 ? iso + 'T00:00:00' : iso);
+      if (isNaN(d)) return iso;
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+    function rel(iso) {
+      if (!iso) return null;
+      var t = new Date(iso + 'T00:00:00'); if (isNaN(t)) return null;
+      var n = new Date(); n.setHours(0, 0, 0, 0);
+      var days = Math.round((t - n) / 86400000);
+      if (days === 0) return { label: 'Today', tone: 'soon' };
+      if (days === 1) return { label: 'Tomorrow', tone: 'soon' };
+      if (days === -1) return { label: 'Yesterday', tone: 'past' };
+      if (days < 0) return { label: Math.abs(days) + 'd overdue', tone: 'past' };
+      if (days <= 7) return { label: 'In ' + days + 'd', tone: 'soon' };
+      return { label: fmtDate(iso), tone: 'future' };
+    }
+    var TONE = { soon: 'var(--amber)', past: 'var(--rose)', future: 'var(--text-faint)' };
+    var SRC_COLOR = { Streaming: 'var(--accent-400)', Gig: 'var(--amber)', Beats: 'var(--sky)', Sync: 'var(--rose)', Merch: 'var(--emerald)', Other: 'var(--text-faint)' };
+    var PRIO_COLOR = { high: 'var(--rose)', medium: 'var(--amber)', low: 'var(--sky)' };
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+    function badge(label, color) {
+      return '<span class="badge" style="color:' + color + ';background:' + color +
+        '22;border-color:' + color + '55">' + esc(label) + '</span>';
+    }
+
+    /* ---------- seed + state ---------- */
+    var t = todayISO();
+    var SEED = {
+      releases: [
+        { id: 'r1', title: 'Midnight Frequencies', type: 'Single', releaseDate: addDays(t, -235), streams: 482300, cover: '#8b5cf6' },
+        { id: 'r2', title: 'Neon Tape — EP', type: 'EP', releaseDate: addDays(t, -339), streams: 1240500, cover: '#e879f9' },
+        { id: 'r3', title: 'Afterglow', type: 'Single', releaseDate: addDays(t, -109), streams: 96700, cover: '#38bdf8' },
+        { id: 'r4', title: 'Basement Sessions Vol. 1', type: 'Album', releaseDate: addDays(t, -579), streams: 2038900, cover: '#f59e0b' }
+      ],
+      income: [
+        { id: 'i0', date: addDays(t, -4), source: 'Streaming', amount: 2130, note: 'DistroKid payout — last month' },
+        { id: 'i0b', date: addDays(t, -5), source: 'Beats', amount: 220, note: 'BeatStars — lease pack' },
+        { id: 'i1', date: addDays(t, -9), source: 'Gig', amount: 900, note: 'Warehouse show — support slot' },
+        { id: 'i2', date: addDays(t, -22), source: 'Beats', amount: 350, note: 'BeatStars — 2 exclusive licenses' },
+        { id: 'i3', date: addDays(t, -38), source: 'Sync', amount: 2500, note: 'Afterglow — indie film placement' }
+      ],
+      reminders: [
+        { id: 't1', text: 'Send Afterglow master to mastering engineer', due: addDays(t, 2), priority: 'high', done: false },
+        { id: 't2', text: 'Pitch Neon Tape to 5 editorial playlists', due: addDays(t, 5), priority: 'medium', done: false },
+        { id: 't3', text: 'Renew DistroKid subscription', due: addDays(t, 13), priority: 'low', done: false },
+        { id: 't4', text: 'Back up project files to external drive', due: addDays(t, -2), priority: 'medium', done: true }
+      ],
+      trips: [
+        { id: 'v1', destination: 'Berlin, DE', purpose: 'Studio session w/ Kaspar', start: addDays(t, 11), end: addDays(t, 17), notes: 'Flight TXL 8:40am. Bring the MPC + hard drive.' },
+        { id: 'v2', destination: 'Los Angeles, US', purpose: 'Sync licensing meetings', start: addDays(t, 35), end: addDays(t, 39), notes: 'Meet with 2 music supervisors. Book AirBnB near Silver Lake.' }
+      ]
+    };
+
+    var KEY = 'studio9-preview';
+    var state = { tab: 'home', data: null, modal: null };
+    function loadState() {
+      try { var raw = localStorage.getItem(KEY); if (raw) return JSON.parse(raw); } catch (e) {}
+      return JSON.parse(JSON.stringify(SEED));
+    }
+    function persist() { try { localStorage.setItem(KEY, JSON.stringify(state.data)); } catch (e) {} }
+    state.data = loadState();
+
+    /* ---------- screens ---------- */
+    function pageHead(title, sub, actionLabel, actionAttr) {
+      return '<div class="pg-head"><div><h1 class="pg-title">' + title + '</h1>' +
+        (sub ? '<p class="pg-sub">' + sub + '</p>' : '') + '</div>' +
+        (actionLabel ? '<button class="btn btn-primary btn-sm" ' + actionAttr + '>' + icon('plus', 15, '#fff', 2.4) + ' ' + actionLabel + '</button>' : '') +
+        '</div>';
+    }
+    function empty(ic, title, hint, actLabel, actAttr) {
+      return '<div class="empty"><div class="ico">' + icon(ic, 24, 'currentColor', 1.8) + '</div>' +
+        '<div class="et">' + title + '</div><div class="eh">' + hint + '</div>' +
+        '<div style="margin-top:16px"><button class="btn btn-primary" ' + actAttr + '>' + actLabel + '</button></div></div>';
+    }
+
+    function viewHome() {
+      var d = state.data;
+      var totalStreams = d.releases.reduce(function (s, r) { return s + (+r.streams || 0); }, 0);
+      var mkey = todayISO().slice(0, 7);
+      var monthInc = d.income.filter(function (i) { return (i.date || '').slice(0, 7) === mkey; }).reduce(function (s, i) { return s + (+i.amount || 0); }, 0);
+      var open = d.reminders.filter(function (r) { return !r.done; });
+      var trips = d.trips.filter(function (x) { return (x.end || x.start) >= todayISO(); }).sort(function (a, b) { return a.start < b.start ? -1 : 1; });
+      var top = d.releases.slice().sort(function (a, b) { return (b.streams || 0) - (a.streams || 0); }).slice(0, 5);
+      var max = Math.max(1, Math.max.apply(null, top.map(function (r) { return r.streams; })));
+      var hr = new Date().getHours();
+      var greet = hr < 12 ? 'Good morning' : hr < 18 ? 'Good afternoon' : 'Good evening';
+
+      var tiles = [
+        { ic: 'play', tint: 'var(--accent-400)', val: nf(totalStreams), lbl: 'Total streams', sub: 'Across ' + d.releases.length + ' releases' },
+        { ic: 'wallet', tint: 'var(--emerald)', val: money(monthInc), lbl: 'Income this month', sub: d.income.length + ' entries' },
+        { ic: 'list', tint: 'var(--accent-400)', val: open.length, lbl: 'Open reminders', sub: open.length ? 'Due soon below' : 'All caught up' },
+        { ic: 'plane', tint: 'var(--sky)', val: trips.length, lbl: 'Upcoming trips', sub: trips[0] ? trips[0].destination : 'None planned' }
+      ].map(function (x) {
+        return '<div class="card tile"><div class="chip-ico" style="background:' + x.tint + '22;color:' + x.tint + '">' +
+          icon(x.ic, 18, 'currentColor', 2.2) + '</div><div class="val">' + x.val + '</div>' +
+          '<div class="lbl">' + x.lbl + '</div><div class="sub">' + x.sub + '</div></div>';
+      }).join('');
+
+      var bars = top.length ? top.map(function (r) {
+        return '<div class="barrow"><div class="top"><div class="name">' + esc(r.title) + '</div>' +
+          '<div class="num">' + compact(r.streams) + '</div></div>' +
+          '<div class="track"><div class="fill" style="width:' + (r.streams / max * 100) + '%"></div></div></div>';
+      }).join('') : '<div class="muted">Add releases to see your streams.</div>';
+
+      var due = open.length ? open.slice(0, 5).map(function (r) {
+        var rl = rel(r.due);
+        return '<div class="mini-row"><div class="dot"></div><div class="txt">' + esc(r.text) + '</div>' +
+          (rl ? badge(rl.label, TONE[rl.tone]) : '') + '</div>';
+      }).join('') : '<div class="muted">Nothing due. Nice work. 🎧</div>';
+
+      var trav = trips.length ? trips.slice(0, 3).map(function (x) {
+        return '<div class="mini-row" style="display:block"><div style="font-weight:600;color:#fff;font-size:14px">' + esc(x.destination) + '</div>' +
+          '<div style="color:var(--accent-300);font-size:12.5px;margin-top:2px">' + esc(x.purpose) + '</div>' +
+          '<div style="color:var(--text-faint);font-size:12px;margin-top:6px;display:flex;gap:6px;align-items:center">' +
+          icon('cal', 13, 'currentColor', 2) + fmtDate(x.start) + ' → ' + fmtDate(x.end) + '</div></div>';
+      }).join('') : '<div class="muted">No trips planned yet.</div>';
+
+      return '<div class="view">' +
+        '<div class="pg-head"><div><h1 class="pg-title">Your <span class="accent">production HQ</span></h1>' +
+        '<p class="pg-sub">' + greet + ' 👋</p></div></div>' +
+        '<div class="tiles">' + tiles + '</div>' +
+        '<div class="card" style="margin-top:12px"><div class="sec-head"><div class="left">' + icon('disc', 16) + 'Top releases by streams</div>' +
+        '<button class="view-all" data-nav="catalog">View all ›</button></div><div class="stack" style="margin-top:14px">' + bars + '</div></div>' +
+        '<div class="card" style="margin-top:12px"><div class="sec-head"><div class="left">' + icon('list', 16) + 'Due soon</div>' +
+        '<button class="view-all" data-nav="reminders">View all ›</button></div><div class="stack" style="margin-top:12px">' + due + '</div></div>' +
+        '<div class="card" style="margin-top:12px"><div class="sec-head"><div class="left">' + icon('plane', 16) + 'Upcoming travel</div>' +
+        '<button class="view-all" data-nav="travel">View all ›</button></div><div class="stack" style="margin-top:12px">' + trav + '</div></div>' +
+        '</div>';
+    }
+
+    function viewCatalog() {
+      var d = state.data;
+      var total = d.releases.reduce(function (s, r) { return s + (+r.streams || 0); }, 0);
+      var sorted = d.releases.slice().sort(function (a, b) { return (b.streams || 0) - (a.streams || 0); });
+      var body = d.releases.length === 0
+        ? empty('disc', 'No releases yet', 'Add your singles, EPs, and albums to track streams across your whole catalog.', 'Add your first release', 'data-open="release"')
+        : '<div class="stack">' + sorted.map(function (r) {
+          return '<div class="card rel"><div class="cover" style="background:' + r.cover + '">' + icon('disc', 22, '#fff', 2) + '</div>' +
+            '<div class="meta"><div class="t-row"><div class="name">' + esc(r.title) + '</div>' + badge(r.type, 'var(--text-dim)') + '</div>' +
+            '<div class="date">Released ' + fmtDate(r.releaseDate) + '</div>' +
+            '<div class="streams">' + compact(r.streams) + ' <span>streams</span></div></div>' +
+            '<div class="row-actions"><button class="icon-btn" data-edit="release" data-id="' + r.id + '">' + icon('pencil', 16) + '</button>' +
+            '<button class="icon-btn danger" data-del="releases" data-id="' + r.id + '">' + icon('trash', 16) + '</button></div></div>';
+        }).join('') + '</div>';
+      return '<div class="view">' + pageHead('Catalog', d.releases.length + ' releases · ' + nf(total) + ' streams', 'Add', 'data-open="release"') +
+        '<div class="card hero" style="margin-bottom:14px"><div class="ico">' + icon('play', 20) + '</div>' +
+        '<div><div class="lbl">Total streams across catalog</div><div class="big">' + nf(total) + '</div></div></div>' +
+        body + '</div>';
+    }
+
+    function viewIncome() {
+      var d = state.data;
+      var total = d.income.reduce(function (s, i) { return s + (+i.amount || 0); }, 0);
+      var mkey = todayISO().slice(0, 7);
+      var month = d.income.filter(function (i) { return (i.date || '').slice(0, 7) === mkey; }).reduce(function (s, i) { return s + (+i.amount || 0); }, 0);
+      var map = {}; d.income.forEach(function (i) { map[i.source] = (map[i.source] || 0) + (+i.amount || 0); });
+      var breakdown = Object.keys(map).map(function (k) { return [k, map[k]]; }).sort(function (a, b) { return b[1] - a[1]; });
+      var sorted = d.income.slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; });
+
+      var tiles = '<div class="tiles" style="grid-template-columns:1fr 1fr"><div class="card"><div class="lbl" style="font-size:13px;color:var(--text-dim)">All-time</div>' +
+        '<div class="big" style="font-size:23px;font-weight:800;color:#fff;margin-top:4px;font-variant-numeric:tabular-nums">' + money(total) + '</div></div>' +
+        '<div class="card"><div class="flex" style="gap:6px;color:var(--text-dim);font-size:13px">' + icon('trend', 13) + 'This month</div>' +
+        '<div style="font-size:23px;font-weight:800;color:var(--emerald);margin-top:4px;font-variant-numeric:tabular-nums">' + money(month) + '</div></div></div>';
+
+      var bd = breakdown.length ? '<div class="card" style="margin-top:12px"><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px">By source</div>' +
+        '<div class="flex wrap" style="gap:8px">' + breakdown.map(function (b) {
+          return '<div class="flex" style="gap:8px;background:var(--surface);border-radius:12px;padding:8px 12px">' +
+            badge(b[0], SRC_COLOR[b[0]] || 'var(--text-dim)') + '<span style="font-size:13px;font-weight:700">' + money(b[1]) + '</span></div>';
+        }).join('') + '</div></div>' : '';
+
+      var list = d.income.length === 0
+        ? empty('wallet', 'No income logged yet', 'Log every payout — streaming, shows, beats, and sync — to see where your money actually comes from.', 'Log your first payout', 'data-open="income"')
+        : '<div class="card list" style="padding:0;margin-top:12px">' + sorted.map(function (i) {
+          return '<div class="item"><div class="grow"><div class="flex" style="gap:8px">' + badge(i.source, SRC_COLOR[i.source] || 'var(--text-dim)') +
+            '<span style="font-size:12px;color:var(--text-faint)">' + fmtDate(i.date) + '</span></div>' +
+            (i.note ? '<div class="note">' + esc(i.note) + '</div>' : '') + '</div>' +
+            '<div class="amt">' + money(i.amount) + '</div>' +
+            '<button class="icon-btn danger" data-del="income" data-id="' + i.id + '">' + icon('trash', 16) + '</button></div>';
+        }).join('') + '</div>';
+
+      return '<div class="view">' + pageHead('Income', 'Royalties, gigs, beats &amp; sync', 'Log', 'data-open="income"') +
+        tiles + bd + list + '</div>';
+    }
+
+    function viewReminders() {
+      var d = state.data;
+      var rank = { high: 0, medium: 1, low: 2 };
+      function sortFn(a, b) { if ((a.due || '') !== (b.due || '')) return (a.due || '') < (b.due || '') ? -1 : 1; return (rank[a.priority] == null ? 3 : rank[a.priority]) - (rank[b.priority] == null ? 3 : rank[b.priority]); }
+      var active = d.reminders.filter(function (r) { return !r.done; }).sort(sortFn);
+      var done = d.reminders.filter(function (r) { return r.done; }).sort(sortFn);
+
+      function row(r) {
+        var rl = rel(r.due);
+        return '<div class="rem"><button class="check' + (r.done ? ' done' : '') + '" data-toggle="' + r.id + '">' + icon('check', 14, 'currentColor', 3) + '</button>' +
+          '<div class="txt' + (r.done ? ' done' : '') + '">' + esc(r.text) + '</div>' +
+          (!r.done ? badge(r.priority, PRIO_COLOR[r.priority] || 'var(--text-dim)') : '') +
+          (rl && !r.done ? badge(rl.label, TONE[rl.tone]) : '') +
+          '<button class="icon-btn danger" data-del="reminders" data-id="' + r.id + '">' + icon('trash', 16) + '</button></div>';
+      }
+
+      var body = d.reminders.length === 0
+        ? empty('list', 'Nothing to remember yet', 'Add the things you keep forgetting — masters to send, playlists to pitch, subscriptions to renew.', 'Add your first reminder', 'data-open="reminder"')
+        : '<div class="card" style="padding:0;overflow:hidden">' + (active.length ? active.map(row).join('') : '<div class="muted" style="text-align:center;padding:28px">All caught up — nice. 🎧</div>') + '</div>' +
+        (done.length ? '<div class="eyebrow">COMPLETED</div><div class="card" style="padding:0;overflow:hidden;opacity:.7">' + done.map(row).join('') + '</div>' : '');
+
+      return '<div class="view">' + pageHead('Reminders', active.length + ' to do · ' + done.length + ' done', 'Add', 'data-open="reminder"') + body + '</div>';
+    }
+
+    function viewTravel() {
+      var d = state.data;
+      var sorted = d.trips.slice().sort(function (a, b) { return a.start < b.start ? -1 : 1; });
+      function nights(s, e) { if (!s || !e) return null; var n = Math.round((new Date(e + 'T00:00:00') - new Date(s + 'T00:00:00')) / 86400000); return n >= 0 ? n : null; }
+      var body = d.trips.length === 0
+        ? empty('plane', 'No trips planned', 'Add studio sessions, tour dates, and meetings so you never double-book or forget the gear.', 'Plan your first trip', 'data-open="trip"')
+        : '<div class="stack">' + sorted.map(function (x) {
+          var rl = rel(x.start); var n = nights(x.start, x.end);
+          return '<div class="card trip"><div class="flex between"><div class="name">' + icon('pin', 16, 'var(--accent-300)', 2) + esc(x.destination) + '</div>' +
+            '<div class="flex" style="gap:4px">' + (rl ? badge(rl.label, TONE[rl.tone]) : '') +
+            '<button class="icon-btn" data-edit="trip" data-id="' + x.id + '">' + icon('pencil', 15) + '</button>' +
+            '<button class="icon-btn danger" data-del="trips" data-id="' + x.id + '">' + icon('trash', 15) + '</button></div></div>' +
+            (x.purpose ? '<div class="purpose">' + esc(x.purpose) + '</div>' : '') +
+            '<div class="dates">' + icon('cal', 14, 'currentColor', 2) + fmtDate(x.start) + ' → ' + fmtDate(x.end) + (n != null ? '  ·  ' + n + ' night' + (n === 1 ? '' : 's') : '') + '</div>' +
+            (x.notes ? '<div class="notes">' + esc(x.notes) + '</div>' : '') + '</div>';
+        }).join('') + '</div>';
+      return '<div class="view">' + pageHead('Travel', 'Sessions, shows &amp; licensing trips', 'Plan', 'data-open="trip"') + body + '</div>';
+    }
+
+    var VIEWS = { home: viewHome, catalog: viewCatalog, income: viewIncome, reminders: viewReminders, travel: viewTravel };
+    var TABS = [
+      { id: 'home', label: 'Home', ic: 'home' },
+      { id: 'catalog', label: 'Catalog', ic: 'disc' },
+      { id: 'income', label: 'Income', ic: 'wallet' },
+      { id: 'reminders', label: 'Reminders', ic: 'list' },
+      { id: 'travel', label: 'Travel', ic: 'plane' }
+    ];
+
+    function renderTabs() {
+      var open = state.data.reminders.filter(function (r) { return !r.done; }).length;
+      document.getElementById('tabbar').innerHTML = TABS.map(function (tb) {
+        var active = state.tab === tb.id;
+        return '<button data-nav="' + tb.id + '" class="' + (active ? 'active' : '') + '">' +
+          icon(tb.ic, 22, 'currentColor', active ? 2.3 : 2) +
+          (tb.id === 'reminders' && open ? '<span class="badge-dot">' + open + '</span>' : '') +
+          '<span>' + tb.label + '</span></button>';
+      }).join('');
+    }
+    function render() {
+      document.getElementById('app').innerHTML = VIEWS[state.tab]();
+      renderTabs();
+    }
+
+    /* ---------- modal ---------- */
+    var msel = {};
+    function chipRow(group, opts, val) {
+      return '<div class="chips" data-chipgroup="' + group + '">' + opts.map(function (o) {
+        return '<button type="button" class="chip' + (o === val ? ' active' : '') + '" data-chip="' + esc(o) + '">' + esc(o) + '</button>';
+      }).join('') + '</div>';
+    }
+    function dateField(id, label, val) {
+      return '<div class="field"><label>' + label + '</label><input class="input" id="' + id + '" value="' + esc(val) + '" placeholder="YYYY-MM-DD" autocomplete="off">' +
+        '<div class="date-quick"><span class="prev" id="' + id + '-prev">' + fmtDate(val) + '</span>' +
+        '<div class="qs">' + [['Today', 0], ['+1w', 7], ['+2w', 14], ['+1m', 30]].map(function (q) {
+          return '<button type="button" class="qbtn" data-dateset="' + id + '" data-days="' + q[1] + '">' + q[0] + '</button>';
+        }).join('') + '</div></div></div>';
+    }
+    function field(id, label, val, ph, type) {
+      var tag = type === 'textarea'
+        ? '<textarea class="input" id="' + id + '" placeholder="' + esc(ph) + '">' + esc(val) + '</textarea>'
+        : '<input class="input" id="' + id + '" value="' + esc(val) + '" placeholder="' + esc(ph) + '"' + (type === 'number' ? ' inputmode="numeric"' : '') + '>';
+      return '<div class="field"><label>' + label + '</label>' + tag + '</div>';
+    }
+
+    var COVERS = ['#8b5cf6', '#e879f9', '#38bdf8', '#f59e0b', '#34d399', '#f472b6'];
+    function openModal(kind, editing) {
+      var rec = null;
+      if (editing) {
+        var coll = { release: 'releases', trip: 'trips' }[kind];
+        rec = state.data[coll].filter(function (x) { return x.id === editing; })[0];
+      }
+      msel = {};
+      var html = '', title = '';
+      if (kind === 'release') {
+        title = editing ? 'Edit release' : 'Add release';
+        msel.type = rec ? rec.type : 'Single';
+        msel.cover = rec ? rec.cover : COVERS[0];
+        msel.date = rec ? rec.releaseDate : todayISO();
+        html = field('f-title', 'Title', rec ? rec.title : '', 'e.g. Midnight Frequencies') +
+          '<div class="field"><label>Type</label>' + chipRow('type', ['Single', 'EP', 'Album', 'Mixtape', 'Beat Pack'], msel.type) + '</div>' +
+          dateField('f-date', 'Release date', msel.date) +
+          field('f-streams', 'Total streams', rec ? rec.streams : '', '0', 'number') +
+          '<div class="field"><label>Cover colour</label><div class="swatches" data-swatches>' + COVERS.map(function (c) {
+            return '<button type="button" class="swatch' + (c === msel.cover ? ' active' : '') + '" data-swatch="' + c + '" style="background:' + c + '"></button>';
+          }).join('') + '</div></div>';
+      } else if (kind === 'income') {
+        title = 'Log income';
+        msel.source = 'Streaming'; msel.date = todayISO();
+        html = dateField('f-date', 'Date', msel.date) +
+          '<div class="field"><label>Source</label>' + chipRow('source', ['Streaming', 'Gig', 'Beats', 'Sync', 'Merch', 'Other'], msel.source) + '</div>' +
+          field('f-amount', 'Amount (USD)', '', '0', 'number') +
+          field('f-note', 'Note (optional)', '', 'e.g. DistroKid payout');
+      } else if (kind === 'reminder') {
+        title = 'Add reminder';
+        msel.priority = 'medium'; msel.date = todayISO();
+        html = field('f-text', 'What do you need to remember?', '', 'e.g. Send Afterglow master to engineer', 'textarea') +
+          dateField('f-date', 'Due date', msel.date) +
+          '<div class="field"><label>Priority</label>' + chipRow('priority', ['high', 'medium', 'low'], msel.priority) + '</div>';
+      } else if (kind === 'trip') {
+        title = editing ? 'Edit trip' : 'Plan a trip';
+        msel.start = rec ? rec.start : todayISO();
+        msel.end = rec ? rec.end : todayISO();
+        html = field('f-dest', 'Destination', rec ? rec.destination : '', 'e.g. Berlin, DE') +
+          field('f-purpose', 'Purpose', rec ? rec.purpose : '', 'e.g. Studio session, show, sync meeting') +
+          dateField('f-start', 'Start', msel.start) +
+          dateField('f-end', 'End', msel.end) +
+          field('f-notes', 'Notes (optional)', rec ? rec.notes : '', 'Flights, gear to bring, who you\'re meeting…', 'textarea');
+      }
+      state.modal = { kind: kind, editing: editing };
+      document.getElementById('modal-root').innerHTML =
+        '<div class="backdrop" data-close></div><div class="sheet" role="dialog" aria-modal="true">' +
+        '<div class="grabber"></div><h2>' + title + '</h2>' + html +
+        '<div class="sheet-actions"><button class="btn btn-ghost" data-close>Cancel</button>' +
+        '<button class="btn btn-primary" data-save>' + (editing ? 'Save' : (kind === 'income' ? 'Add entry' : kind === 'reminder' ? 'Add reminder' : kind === 'trip' ? 'Add trip' : 'Add release')) + '</button></div></div>';
+    }
+    function closeModal() { state.modal = null; document.getElementById('modal-root').innerHTML = ''; }
+
+    function saveModal() {
+      var k = state.modal.kind, ed = state.modal.editing, d = state.data;
+      function v(id) { var el = document.getElementById(id); return el ? el.value : ''; }
+      if (k === 'release') {
+        var title = v('f-title').trim(); if (!title) return;
+        var recRel = { title: title, type: msel.type, releaseDate: v('f-date'), streams: Number(v('f-streams')) || 0, cover: msel.cover };
+        if (ed) { d.releases = d.releases.map(function (x) { return x.id === ed ? Object.assign({}, x, recRel) : x; }); }
+        else { recRel.id = uid(); d.releases.unshift(recRel); }
+      } else if (k === 'income') {
+        var amt = v('f-amount'); if (!amt) return;
+        d.income.unshift({ id: uid(), date: v('f-date'), source: msel.source, amount: Number(amt) || 0, note: v('f-note') });
+      } else if (k === 'reminder') {
+        var txt = v('f-text').trim(); if (!txt) return;
+        d.reminders.unshift({ id: uid(), text: txt, due: v('f-date'), priority: msel.priority, done: false });
+      } else if (k === 'trip') {
+        var dest = v('f-dest').trim(); if (!dest) return;
+        var recTrip = { destination: dest, purpose: v('f-purpose'), start: v('f-start'), end: v('f-end'), notes: v('f-notes') };
+        if (ed) { d.trips = d.trips.map(function (x) { return x.id === ed ? Object.assign({}, x, recTrip) : x; }); }
+        else { recTrip.id = uid(); d.trips.unshift(recTrip); }
+      }
+      persist(); closeModal(); render();
+    }
+
+    /* ---------- events ---------- */
+    document.addEventListener('click', function (e) {
+      var el = e.target.closest('[data-nav],[data-open],[data-edit],[data-del],[data-toggle],[data-close],[data-save],[data-chip],[data-swatch],[data-dateset]');
+      if (!el) return;
+
+      if (el.hasAttribute('data-nav')) { state.tab = el.getAttribute('data-nav'); document.getElementById('scroll').scrollTop = 0; render(); return; }
+      if (el.hasAttribute('data-open')) { openModal(el.getAttribute('data-open')); return; }
+      if (el.hasAttribute('data-edit')) { openModal(el.getAttribute('data-edit'), el.getAttribute('data-id')); return; }
+      if (el.hasAttribute('data-del')) {
+        var coll = el.getAttribute('data-del'), id = el.getAttribute('data-id');
+        state.data[coll] = state.data[coll].filter(function (x) { return x.id !== id; });
+        persist(); render(); return;
+      }
+      if (el.hasAttribute('data-toggle')) {
+        var tid = el.getAttribute('data-toggle');
+        state.data.reminders = state.data.reminders.map(function (x) { return x.id === tid ? Object.assign({}, x, { done: !x.done }) : x; });
+        persist(); render(); return;
+      }
+      if (el.hasAttribute('data-close')) { closeModal(); return; }
+      if (el.hasAttribute('data-save')) { saveModal(); return; }
+      if (el.hasAttribute('data-chip')) {
+        var group = el.closest('[data-chipgroup]').getAttribute('data-chipgroup');
+        msel[group] = el.getAttribute('data-chip');
+        var sibs = el.parentNode.querySelectorAll('.chip');
+        for (var i = 0; i < sibs.length; i++) sibs[i].classList.remove('active');
+        el.classList.add('active');
+        return;
+      }
+      if (el.hasAttribute('data-swatch')) {
+        msel.cover = el.getAttribute('data-swatch');
+        var sw = el.parentNode.querySelectorAll('.swatch');
+        for (var j = 0; j < sw.length; j++) sw[j].classList.remove('active');
+        el.classList.add('active');
+        return;
+      }
+      if (el.hasAttribute('data-dateset')) {
+        var target = el.getAttribute('data-dateset');
+        var val = addDays(todayISO(), Number(el.getAttribute('data-days')));
+        var input = document.getElementById(target);
+        if (input) { input.value = val; var prev = document.getElementById(target + '-prev'); if (prev) prev.textContent = fmtDate(val); }
+        return;
+      }
+    });
+    // live-update the date preview text as the user types
+    document.addEventListener('input', function (e) {
+      var id = e.target.id;
+      if (id && /^f-(date|start|end)$/.test(id)) {
+        var prev = document.getElementById(id + '-prev');
+        if (prev) prev.textContent = fmtDate(e.target.value);
+      }
+    });
+
+    render();
+  })();
+</script>
+</body>
+</html>
