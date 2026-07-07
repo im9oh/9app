@@ -780,6 +780,146 @@
     margin-top: 8px;
   }
 
+  /* Onboarding-style wizard */
+  .wz-sheet {
+    padding-top: 14px;
+  }
+  .wz-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .wz-dots {
+    display: flex;
+    gap: 6px;
+  }
+  .wz-dot {
+    width: 26px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    transition: background 0.25s var(--ease-out);
+  }
+  .wz-dot.on {
+    background: linear-gradient(90deg, var(--accent-500), var(--fuchsia));
+  }
+  .wz-x {
+    background: none;
+    border: 0;
+    color: var(--text-faint);
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 4px;
+  }
+  .wz-step {
+    min-height: 208px;
+    animation: wzin 0.28s var(--ease-out) both;
+  }
+  .wz-step.from-left {
+    animation-name: wzin-left;
+  }
+  @keyframes wzin {
+    from {
+      opacity: 0;
+      transform: translateX(26px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes wzin-left {
+    from {
+      opacity: 0;
+      transform: translateX(-26px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .wz-eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--accent-300);
+    margin-bottom: 10px;
+  }
+  .wz-q {
+    font-size: 23px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+  .wz-hint {
+    font-size: 13.5px;
+    color: var(--text-faint);
+    margin-top: 8px;
+    margin-bottom: 20px;
+  }
+  .wz-input {
+    font-size: 17px;
+    padding: 14px;
+  }
+  .wz-foot {
+    display: flex;
+    gap: 12px;
+    margin-top: 26px;
+  }
+  .wz-foot .btn-primary {
+    flex: 1;
+  }
+  .wz-foot .btn-back {
+    flex: 0 0 auto;
+    min-width: 88px;
+  }
+  .btn[disabled] {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  .wz-swatches {
+    gap: 14px;
+    margin-top: 22px;
+  }
+  .wz-swatches .swatch {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+  }
+  .wz-preview {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 18px;
+    background: var(--surface-3);
+    border-radius: 16px;
+    padding: 14px;
+  }
+  .wz-cover {
+    width: 60px;
+    height: 60px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .wz-preview-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .wz-preview-sub {
+    font-size: 12.5px;
+    color: var(--text-faint);
+    margin-top: 3px;
+  }
+
   .muted {
     color: var(--text-faint);
     font-size: 13px;
@@ -975,7 +1115,7 @@
       var total = d.releases.reduce(function (s, r) { return s + (+r.streams || 0); }, 0);
       var sorted = d.releases.slice().sort(function (a, b) { return (b.streams || 0) - (a.streams || 0); });
       var body = d.releases.length === 0
-        ? empty('disc', 'No releases yet', 'Add your singles, EPs, and albums to track streams across your whole catalog.', 'Add your first release', 'data-open="release"')
+        ? empty('disc', 'No singles yet', 'Add your singles to track total streams across your whole catalog.', 'Add your first single', 'data-open="release"')
         : '<div class="stack">' + sorted.map(function (r) {
           return '<div class="card rel"><div class="cover" style="background:' + r.cover + '">' + icon('disc', 22, '#fff', 2) + '</div>' +
             '<div class="meta"><div class="t-row"><div class="name">' + esc(r.title) + '</div>' + badge(r.type, 'var(--text-dim)') + '</div>' +
@@ -1121,19 +1261,7 @@
       }
       msel = {};
       var html = '', title = '';
-      if (kind === 'release') {
-        title = editing ? 'Edit release' : 'Add release';
-        msel.type = rec ? rec.type : 'Single';
-        msel.cover = rec ? rec.cover : COVERS[0];
-        msel.date = rec ? rec.releaseDate : todayISO();
-        html = field('f-title', 'Title', rec ? rec.title : '', 'e.g. Midnight Frequencies') +
-          '<div class="field"><label>Type</label>' + chipRow('type', ['Single', 'EP', 'Album', 'Mixtape', 'Beat Pack'], msel.type) + '</div>' +
-          dateField('f-date', 'Release date', msel.date) +
-          field('f-streams', 'Total streams', rec ? rec.streams : '', '0', 'number') +
-          '<div class="field"><label>Cover colour</label><div class="swatches" data-swatches>' + COVERS.map(function (c) {
-            return '<button type="button" class="swatch' + (c === msel.cover ? ' active' : '') + '" data-swatch="' + c + '" style="background:' + c + '"></button>';
-          }).join('') + '</div></div>';
-      } else if (kind === 'income') {
+      if (kind === 'income') {
         title = 'Log income';
         msel.source = 'Streaming'; msel.date = todayISO();
         html = dateField('f-date', 'Date', msel.date) +
@@ -1168,12 +1296,7 @@
     function saveModal() {
       var k = state.modal.kind, ed = state.modal.editing, d = state.data;
       function v(id) { var el = document.getElementById(id); return el ? el.value : ''; }
-      if (k === 'release') {
-        var title = v('f-title').trim(); if (!title) return;
-        var recRel = { title: title, type: msel.type, releaseDate: v('f-date'), streams: Number(v('f-streams')) || 0, cover: msel.cover };
-        if (ed) { d.releases = d.releases.map(function (x) { return x.id === ed ? Object.assign({}, x, recRel) : x; }); }
-        else { recRel.id = uid(); d.releases.unshift(recRel); }
-      } else if (k === 'income') {
+      if (k === 'income') {
         var amt = v('f-amount'); if (!amt) return;
         d.income.unshift({ id: uid(), date: v('f-date'), source: msel.source, amount: Number(amt) || 0, note: v('f-note') });
       } else if (k === 'reminder') {
@@ -1188,14 +1311,115 @@
       persist(); closeModal(); render();
     }
 
+    /* ---------- add-single wizard (step-by-step onboarding) ---------- */
+    var wiz = null;
+    var WSTEPS = ['title', 'date', 'streams', 'cover'];
+
+    function openReleaseWizard(editing) {
+      var rec = editing ? state.data.releases.filter(function (x) { return x.id === editing; })[0] : null;
+      wiz = {
+        editing: editing || null,
+        step: 0,
+        dir: 1,
+        data: {
+          title: rec ? rec.title : '',
+          releaseDate: rec ? rec.releaseDate : todayISO(),
+          streams: rec ? String(rec.streams) : '',
+          cover: rec ? rec.cover : COVERS[0]
+        }
+      };
+      state.modal = { kind: 'wizard' };
+      renderWizard();
+    }
+
+    function captureWizStep() {
+      if (!wiz) return;
+      var key = WSTEPS[wiz.step], el;
+      if (key === 'title' && (el = document.getElementById('wz-title'))) wiz.data.title = el.value;
+      else if (key === 'date' && (el = document.getElementById('wz-date'))) wiz.data.releaseDate = el.value;
+      else if (key === 'streams' && (el = document.getElementById('wz-streams'))) wiz.data.streams = el.value;
+    }
+
+    function renderWizard() {
+      var step = wiz.step, total = WSTEPS.length, key = WSTEPS[step], d = wiz.data;
+      var dots = '';
+      for (var i = 0; i < total; i++) dots += '<span class="wz-dot' + (i <= step ? ' on' : '') + '"></span>';
+
+      var body = '';
+      if (key === 'title') {
+        body = '<div class="wz-eyebrow">' + (wiz.editing ? 'Edit single' : 'New single') + '</div>' +
+          '<div class="wz-q">What’s the single called?</div>' +
+          '<div class="wz-hint">You can rename it anytime.</div>' +
+          '<input class="input wz-input" id="wz-title" value="' + esc(d.title) + '" placeholder="e.g. Midnight Frequencies" autocomplete="off">';
+      } else if (key === 'date') {
+        body = '<div class="wz-eyebrow">Step 2 of 4</div>' +
+          '<div class="wz-q">When did it release?</div>' +
+          '<div class="wz-hint">Pick a date, or tap a shortcut.</div>' +
+          '<input class="input wz-input" id="wz-date" value="' + esc(d.releaseDate) + '" placeholder="YYYY-MM-DD" autocomplete="off">' +
+          '<div class="date-quick"><span class="prev" id="wz-date-prev">' + fmtDate(d.releaseDate) + '</span><div class="qs">' +
+          [['Today', 0], ['-1w', -7], ['-1m', -30], ['-1y', -365]].map(function (q) {
+            return '<button type="button" class="qbtn" data-dateset="wz-date" data-days="' + q[1] + '">' + q[0] + '</button>';
+          }).join('') + '</div></div>';
+      } else if (key === 'streams') {
+        body = '<div class="wz-eyebrow">Step 3 of 4</div>' +
+          '<div class="wz-q">How many streams so far?</div>' +
+          '<div class="wz-hint">Optional — leave 0 if it’s brand new.</div>' +
+          '<input class="input wz-input" id="wz-streams" value="' + esc(d.streams) + '" placeholder="0" inputmode="numeric">';
+      } else {
+        body = '<div class="wz-eyebrow">Almost done</div>' +
+          '<div class="wz-q">Pick a cover colour</div>' +
+          '<div class="wz-preview"><div class="wz-cover" style="background:' + d.cover + '">' + icon('disc', 28, '#fff', 2) + '</div>' +
+          '<div><div class="wz-preview-title">' + (d.title ? esc(d.title) : 'Your single') + '</div>' +
+          '<div class="wz-preview-sub">Single · ' + fmtDate(d.releaseDate) + '</div></div></div>' +
+          '<div class="swatches wz-swatches">' + COVERS.map(function (c) {
+            return '<button type="button" class="swatch' + (c === d.cover ? ' active' : '') + '" data-wzcover="' + c + '" style="background:' + c + '"></button>';
+          }).join('') + '</div>';
+      }
+
+      var foot = '<div class="wz-foot">';
+      if (step > 0) foot += '<button class="btn btn-ghost btn-back" data-wzprev>Back</button>';
+      if (step < total - 1) {
+        var dis = (key === 'title' && !d.title.trim()) ? ' disabled' : '';
+        foot += '<button class="btn btn-primary" data-wznext' + dis + '>Next</button>';
+      } else {
+        foot += '<button class="btn btn-primary" data-wzfinish>' + (wiz.editing ? 'Save single' : 'Add to catalog') + '</button>';
+      }
+      foot += '</div>';
+
+      document.getElementById('modal-root').innerHTML =
+        '<div class="backdrop" data-wzclose></div>' +
+        '<div class="sheet wz-sheet" role="dialog" aria-modal="true">' +
+        '<div class="wz-top"><div class="wz-dots">' + dots + '</div>' +
+        '<button class="wz-x" data-wzclose aria-label="Close">×</button></div>' +
+        '<div class="wz-step ' + (wiz.dir < 0 ? 'from-left' : '') + '">' + body + '</div>' + foot + '</div>';
+
+      var ti = document.getElementById('wz-title');
+      if (ti) { ti.focus(); }
+    }
+
+    function finishWizard() {
+      captureWizStep();
+      var d = wiz.data;
+      if (!d.title.trim()) { wiz.step = 0; wiz.dir = -1; renderWizard(); return; }
+      var rec = { title: d.title.trim(), type: 'Single', releaseDate: d.releaseDate, streams: Number(d.streams) || 0, cover: d.cover };
+      if (wiz.editing) {
+        state.data.releases = state.data.releases.map(function (x) { return x.id === wiz.editing ? Object.assign({}, x, rec) : x; });
+      } else {
+        rec.id = uid();
+        state.data.releases.unshift(rec);
+      }
+      wiz = null;
+      persist(); closeModal(); render();
+    }
+
     /* ---------- events ---------- */
     document.addEventListener('click', function (e) {
-      var el = e.target.closest('[data-nav],[data-open],[data-edit],[data-del],[data-toggle],[data-close],[data-save],[data-chip],[data-swatch],[data-dateset]');
+      var el = e.target.closest('[data-nav],[data-open],[data-edit],[data-del],[data-toggle],[data-close],[data-save],[data-chip],[data-swatch],[data-dateset],[data-wzprev],[data-wznext],[data-wzfinish],[data-wzclose],[data-wzcover]');
       if (!el) return;
 
       if (el.hasAttribute('data-nav')) { state.tab = el.getAttribute('data-nav'); document.getElementById('scroll').scrollTop = 0; render(); return; }
-      if (el.hasAttribute('data-open')) { openModal(el.getAttribute('data-open')); return; }
-      if (el.hasAttribute('data-edit')) { openModal(el.getAttribute('data-edit'), el.getAttribute('data-id')); return; }
+      if (el.hasAttribute('data-open')) { var ok = el.getAttribute('data-open'); if (ok === 'release') openReleaseWizard(); else openModal(ok); return; }
+      if (el.hasAttribute('data-edit')) { var ek = el.getAttribute('data-edit'); if (ek === 'release') openReleaseWizard(el.getAttribute('data-id')); else openModal(ek, el.getAttribute('data-id')); return; }
       if (el.hasAttribute('data-del')) {
         var coll = el.getAttribute('data-del'), id = el.getAttribute('data-id');
         state.data[coll] = state.data[coll].filter(function (x) { return x.id !== id; });
@@ -1208,6 +1432,19 @@
       }
       if (el.hasAttribute('data-close')) { closeModal(); return; }
       if (el.hasAttribute('data-save')) { saveModal(); return; }
+      if (el.hasAttribute('data-wzclose')) { wiz = null; closeModal(); return; }
+      if (el.hasAttribute('data-wznext')) { captureWizStep(); wiz.dir = 1; wiz.step++; renderWizard(); return; }
+      if (el.hasAttribute('data-wzprev')) { captureWizStep(); wiz.dir = -1; wiz.step--; renderWizard(); return; }
+      if (el.hasAttribute('data-wzfinish')) { finishWizard(); return; }
+      if (el.hasAttribute('data-wzcover')) {
+        wiz.data.cover = el.getAttribute('data-wzcover');
+        var sws = document.querySelectorAll('.wz-swatches .swatch');
+        for (var q = 0; q < sws.length; q++) sws[q].classList.remove('active');
+        el.classList.add('active');
+        var pc = document.querySelector('.wz-cover');
+        if (pc) pc.style.background = wiz.data.cover;
+        return;
+      }
       if (el.hasAttribute('data-chip')) {
         var group = el.closest('[data-chipgroup]').getAttribute('data-chipgroup');
         msel[group] = el.getAttribute('data-chip');
@@ -1237,6 +1474,15 @@
       if (id && /^f-(date|start|end)$/.test(id)) {
         var prev = document.getElementById(id + '-prev');
         if (prev) prev.textContent = fmtDate(e.target.value);
+      }
+      if (id === 'wz-date') {
+        var wp = document.getElementById('wz-date-prev');
+        if (wp) wp.textContent = fmtDate(e.target.value);
+      }
+      if (id === 'wz-title' && wiz) {
+        wiz.data.title = e.target.value;
+        var nx = document.querySelector('[data-wznext]');
+        if (nx) { if (e.target.value.trim()) nx.removeAttribute('disabled'); else nx.setAttribute('disabled', ''); }
       }
     });
 
