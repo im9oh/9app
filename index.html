@@ -923,6 +923,155 @@
     margin-top: 3px;
   }
 
+  /* Segmented control (Catalog: Singles / Credits) */
+  .seg {
+    display: flex;
+    gap: 4px;
+    background: var(--surface-3);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 4px;
+    margin-bottom: 16px;
+  }
+  .seg-btn {
+    flex: 1;
+    border: 0;
+    background: none;
+    color: var(--text-dim);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 9px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.15s var(--ease-out), color 0.15s var(--ease-out);
+  }
+  .seg-btn.on {
+    background: var(--accent-500);
+    color: #fff;
+  }
+
+  /* Spotify search sheet */
+  .sp-q-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .sp-q-row .input {
+    flex: 1;
+  }
+  .sp-results {
+    max-height: 52vh;
+    overflow-y: auto;
+    margin: 0 -6px;
+  }
+  .sp-result {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 6px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: background 0.15s var(--ease-out);
+  }
+  .sp-result:active {
+    background: var(--surface-2);
+  }
+  .sp-result .r-meta {
+    flex: 1;
+    min-width: 0;
+  }
+  .sp-result .r-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .sp-result .r-artist {
+    font-size: 12.5px;
+    color: var(--text-faint);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+  .sp-spin {
+    width: 26px;
+    height: 26px;
+    border: 3px solid var(--surface-2);
+    border-top-color: var(--accent-400);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 26px auto;
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .sp-err {
+    color: var(--rose);
+    font-size: 13px;
+    text-align: center;
+    padding: 10px;
+  }
+  .sp-empty {
+    color: var(--text-faint);
+    font-size: 13px;
+    text-align: center;
+    padding: 26px 10px;
+  }
+  .sp-note {
+    font-size: 12px;
+    color: var(--text-faint);
+    line-height: 1.55;
+    margin-top: 14px;
+  }
+  .sp-note code {
+    color: var(--accent-300);
+    background: var(--surface-2);
+    padding: 1px 5px;
+    border-radius: 5px;
+    font-size: 11px;
+    word-break: break-all;
+  }
+  .sp-note a {
+    color: var(--accent-300);
+  }
+  .sp-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #1ed760;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  .sp-disc {
+    text-align: center;
+    margin-top: 16px;
+  }
+  .sp-disc button {
+    background: none;
+    border: 0;
+    color: var(--text-faint);
+    font-size: 12px;
+    text-decoration: underline;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .sp-picked {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface-3);
+    border-radius: 14px;
+    padding: 12px;
+    margin-bottom: 18px;
+  }
+
   .muted {
     color: var(--text-faint);
     font-size: 13px;
@@ -964,6 +1113,10 @@
       pin: '<path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>',
       cal: '<rect x="3.5" y="5" width="17" height="16" rx="2.5"/><path d="M3.5 9.5h17M8 3.5v3M16 3.5v3"/>',
       trend: '<path d="M4 16l5-5 3 3 6-7"/><path d="M15 7h4v4"/>',
+      search: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>',
+      music: '<path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/>',
+      external: '<path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"/>',
+      spotify: '<circle cx="12" cy="12" r="9.5"/><path d="M7 9.5c3.2-1 6.8-.7 9.5 1M7.5 12.5c2.6-.8 5.5-.5 7.7 1M8 15.4c2-.6 4.2-.4 6 .8"/>',
     };
     function icon(name, size, color, sw) {
       size = size || 20;
@@ -1033,14 +1186,24 @@
       trips: [
         { id: 'v1', destination: 'Berlin, DE', purpose: 'Studio session w/ Kaspar', start: addDays(t, 11), end: addDays(t, 17), notes: 'Flight TXL 8:40am. Bring the MPC + hard drive.' },
         { id: 'v2', destination: 'Los Angeles, US', purpose: 'Sync licensing meetings', start: addDays(t, 35), end: addDays(t, 39), notes: 'Meet with 2 music supervisors. Book AirBnB near Silver Lake.' }
+      ],
+      credits: [
+        { id: 'c1', track: 'Golden Hour', artist: 'Mara Vell', role: 'Producer', img: null, cover: '#f59e0b', url: '', releaseDate: addDays(t, -152) },
+        { id: 'c2', track: 'Static Bloom', artist: 'KODE', role: 'Mixing', img: null, cover: '#38bdf8', url: '', releaseDate: addDays(t, -47) }
       ]
     };
 
     var KEY = 'studio9-preview';
-    var state = { tab: 'home', data: null, modal: null };
+    var state = { tab: 'home', catTab: 'singles', data: null, modal: null };
     function loadState() {
-      try { var raw = localStorage.getItem(KEY); if (raw) return JSON.parse(raw); } catch (e) {}
-      return JSON.parse(JSON.stringify(SEED));
+      var d = null;
+      try { var raw = localStorage.getItem(KEY); if (raw) d = JSON.parse(raw); } catch (e) {}
+      if (!d) d = JSON.parse(JSON.stringify(SEED));
+      // make sure every collection exists (older saves may predate new features)
+      ['releases', 'income', 'reminders', 'trips', 'credits'].forEach(function (k) {
+        if (!Array.isArray(d[k])) d[k] = [];
+      });
+      return d;
     }
     function persist() { try { localStorage.setItem(KEY, JSON.stringify(state.data)); } catch (e) {} }
     state.data = loadState();
@@ -1113,24 +1276,54 @@
         '</div>';
     }
 
+    function creditCover(c, size) {
+      size = size || 54;
+      if (c.img) return '<div class="cover" style="width:' + size + 'px;height:' + size + 'px;background-image:url(' + c.img + ');background-size:cover;background-position:center"></div>';
+      return '<div class="cover" style="width:' + size + 'px;height:' + size + 'px;background:' + (c.cover || '#8b5cf6') + '">' + icon('music', size * 0.4, '#fff', 2) + '</div>';
+    }
+
     function viewCatalog() {
       var d = state.data;
+      var seg = state.catTab;
       var total = d.releases.reduce(function (s, r) { return s + (+r.streams || 0); }, 0);
-      var sorted = d.releases.slice().sort(function (a, b) { return (b.streams || 0) - (a.streams || 0); });
-      var body = d.releases.length === 0
-        ? empty('disc', 'No singles yet', 'Add your singles to track total streams across your whole catalog.', 'Add your first single', 'data-open="release"')
-        : '<div class="stack">' + sorted.map(function (r) {
-          return '<div class="card rel"><div class="cover" style="background:' + r.cover + '">' + icon('disc', 22, '#fff', 2) + '</div>' +
-            '<div class="meta"><div class="t-row"><div class="name">' + esc(r.title) + '</div>' + badge(r.type, 'var(--text-dim)') + '</div>' +
-            '<div class="date">Released ' + fmtDate(r.releaseDate) + '</div>' +
-            '<div class="streams">' + compact(r.streams) + ' <span>streams</span></div></div>' +
-            '<div class="row-actions"><button class="icon-btn" data-edit="release" data-id="' + r.id + '">' + icon('pencil', 16) + '</button>' +
-            '<button class="icon-btn danger" data-del="releases" data-id="' + r.id + '">' + icon('trash', 16) + '</button></div></div>';
-        }).join('') + '</div>';
-      return '<div class="view">' + pageHead('Catalog', d.releases.length + ' releases · ' + nf(total) + ' streams', 'Add', 'data-open="release"') +
-        '<div class="card hero" style="margin-bottom:14px"><div class="ico">' + icon('play', 20) + '</div>' +
-        '<div><div class="lbl">Total streams across catalog</div><div class="big">' + nf(total) + '</div></div></div>' +
-        body + '</div>';
+
+      var segCtl = '<div class="seg"><button class="seg-btn' + (seg === 'singles' ? ' on' : '') + '" data-cattab="singles">Singles</button>' +
+        '<button class="seg-btn' + (seg === 'credits' ? ' on' : '') + '" data-cattab="credits">Credits</button></div>';
+
+      var body, sub, actionAttr;
+      if (seg === 'singles') {
+        actionAttr = 'data-open="release"';
+        sub = d.releases.length + ' singles · ' + nf(total) + ' streams';
+        var sorted = d.releases.slice().sort(function (a, b) { return (b.streams || 0) - (a.streams || 0); });
+        var list = d.releases.length === 0
+          ? empty('disc', 'No singles yet', 'Add your singles to track total streams across your whole catalog.', 'Add your first single', 'data-open="release"')
+          : '<div class="stack">' + sorted.map(function (r) {
+            return '<div class="card rel"><div class="cover" style="background:' + r.cover + '">' + icon('disc', 22, '#fff', 2) + '</div>' +
+              '<div class="meta"><div class="t-row"><div class="name">' + esc(r.title) + '</div></div>' +
+              '<div class="date">Released ' + fmtDate(r.releaseDate) + '</div>' +
+              '<div class="streams">' + compact(r.streams) + ' <span>streams</span></div></div>' +
+              '<div class="row-actions"><button class="icon-btn" data-edit="release" data-id="' + r.id + '">' + icon('pencil', 16) + '</button>' +
+              '<button class="icon-btn danger" data-del="releases" data-id="' + r.id + '">' + icon('trash', 16) + '</button></div></div>';
+          }).join('') + '</div>';
+        body = '<div class="card hero" style="margin:0 0 14px"><div class="ico">' + icon('play', 20) + '</div>' +
+          '<div><div class="lbl">Total streams across catalog</div><div class="big">' + nf(total) + '</div></div></div>' + list;
+      } else {
+        actionAttr = 'data-open="spotify"';
+        sub = d.credits.length + ' production credit' + (d.credits.length === 1 ? '' : 's');
+        var cr = d.credits.slice();
+        body = d.credits.length === 0
+          ? empty('music', 'No credits yet', 'Search Spotify to add songs you produced, wrote, mixed, or featured on.', 'Search Spotify', 'data-open="spotify"')
+          : '<div class="stack">' + cr.map(function (c) {
+            return '<div class="card rel">' + creditCover(c) +
+              '<div class="meta"><div class="t-row"><div class="name">' + esc(c.track) + '</div>' + badge(c.role, 'var(--accent-400)') + '</div>' +
+              '<div class="date">' + esc(c.artist) + (c.releaseDate ? ' · ' + fmtDate(c.releaseDate) : '') + '</div></div>' +
+              '<div class="row-actions">' +
+              (c.url ? '<a class="icon-btn" href="' + esc(c.url) + '" target="_blank" rel="noopener" aria-label="Open in Spotify">' + icon('external', 15) + '</a>' : '') +
+              '<button class="icon-btn danger" data-del="credits" data-id="' + c.id + '">' + icon('trash', 16) + '</button></div></div>';
+          }).join('') + '</div>';
+      }
+
+      return '<div class="view">' + pageHead('Catalog', sub, 'Add', actionAttr) + segCtl + body + '</div>';
     }
 
     function viewIncome() {
@@ -1415,13 +1608,182 @@
       persist(); closeModal(); render();
     }
 
+    /* ---------- Spotify search → add credit ---------- */
+    var SP_KEY = 'studio9-spotify';
+    var REDIRECT = (location.origin && location.origin !== 'null')
+      ? location.origin + location.pathname
+      : location.href.split('?')[0].split('#')[0];
+    var ROLES = ['Producer', 'Co-producer', 'Songwriter', 'Mixing', 'Mastering', 'Featured', 'Engineer'];
+    function spLoad() { try { return JSON.parse(localStorage.getItem(SP_KEY)) || {}; } catch (e) { return {}; } }
+    function spSaveCfg() { try { localStorage.setItem(SP_KEY, JSON.stringify(sp)); } catch (e) {} }
+    var sp = spLoad();
+    var spState = null;
+
+    function b64url(buf) {
+      var b = new Uint8Array(buf), s = '';
+      for (var i = 0; i < b.length; i++) s += String.fromCharCode(b[i]);
+      return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    }
+    function randVerifier() { var a = new Uint8Array(48); crypto.getRandomValues(a); return b64url(a.buffer); }
+    function challenge(v) {
+      return crypto.subtle.digest('SHA-256', new TextEncoder().encode(v)).then(b64url);
+    }
+
+    function openSpotify() {
+      spState = { view: sp.token ? 'search' : 'connect', query: '', results: [], loading: false, error: '', picked: null, role: 'Producer', searched: false };
+      state.modal = { kind: 'spotify' };
+      renderSpotify();
+    }
+    function closeSpotify() { spState = null; state.modal = null; document.getElementById('modal-root').innerHTML = ''; }
+
+    function renderSpotify() {
+      var html;
+      if (spState.view === 'connect') {
+        html = '<div class="sp-brand">' + icon('spotify', 18, '#1ed760', 2) + 'Connect Spotify</div>' +
+          '<div class="wz-q" style="font-size:20px">Search real tracks</div>' +
+          '<div class="wz-hint">Paste your Spotify <b>Client ID</b> to search the full catalogue and add credits with real cover art.</div>' +
+          '<div class="field"><label>Spotify Client ID</label><input class="input" id="sp-clientid" value="' + esc(sp.clientId || '') + '" placeholder="e.g. 3a9f...c21" autocomplete="off"></div>' +
+          (spState.error ? '<div class="sp-err">' + esc(spState.error) + '</div>' : '') +
+          '<div class="sp-note">Create a free app at <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noopener">developer.spotify.com/dashboard</a>, then add this exact Redirect URI:<br><code>' + esc(REDIRECT) + '</code></div>' +
+          '<div class="wz-foot"><button class="btn btn-primary" data-sp-connect>Connect</button></div>';
+      } else if (spState.view === 'role') {
+        var p = spState.picked;
+        html = '<h2>Add credit</h2>' +
+          '<div class="sp-picked">' + creditCover(p, 52) +
+          '<div style="min-width:0"><div class="r-name" style="font-size:15px;font-weight:700;color:#fff">' + esc(p.track) + '</div>' +
+          '<div class="r-artist" style="color:var(--text-faint);font-size:13px;margin-top:2px">' + esc(p.artist) + '</div></div></div>' +
+          '<div class="field"><label>Your role</label><div class="chips" data-chipgroup="sp-role">' +
+          ROLES.map(function (r) { return '<button type="button" class="chip' + (r === spState.role ? ' active' : '') + '" data-sp-role="' + r + '">' + r + '</button>'; }).join('') +
+          '</div></div>' +
+          '<div class="wz-foot"><button class="btn btn-ghost btn-back" data-sp-back>Back</button>' +
+          '<button class="btn btn-primary" data-sp-save>Add credit</button></div>';
+      } else {
+        var results = '';
+        if (spState.loading) results = '<div class="sp-spin"></div>';
+        else if (spState.error) results = '<div class="sp-err">' + esc(spState.error) + '</div>';
+        else if (spState.results.length) {
+          results = '<div class="sp-results">' + spState.results.map(function (r, i) {
+            return '<div class="sp-result" data-sp-pick="' + i + '">' + creditCover(r, 48) +
+              '<div class="r-meta"><div class="r-name">' + esc(r.track) + '</div><div class="r-artist">' + esc(r.artist) + '</div></div>' +
+              '<span class="icon-btn" style="color:var(--accent-300)">' + icon('plus', 18) + '</span></div>';
+          }).join('') + '</div>';
+        } else if (spState.searched) results = '<div class="sp-empty">No tracks found. Try another search.</div>';
+        else results = '<div class="sp-empty">Search Spotify by song or artist.</div>';
+
+        html = '<h2><span class="sp-brand" style="margin:0">' + icon('spotify', 17, '#1ed760', 2) + 'Spotify</span></h2>' +
+          '<div class="sp-q-row"><input class="input" id="sp-q" value="' + esc(spState.query) + '" placeholder="Search a song or artist…" autocomplete="off">' +
+          '<button class="btn btn-primary" data-sp-search>' + icon('search', 16, '#fff', 2.4) + '</button></div>' +
+          results +
+          '<div class="sp-disc"><button data-sp-reset>Disconnect Spotify</button></div>';
+      }
+      document.getElementById('modal-root').innerHTML =
+        '<div class="backdrop" data-sp-close></div>' +
+        '<div class="sheet" role="dialog" aria-modal="true"><div class="wz-top"><div></div>' +
+        '<button class="wz-x" data-sp-close aria-label="Close">×</button></div>' + html + '</div>';
+      var q = document.getElementById('sp-q'); if (q && !spState.results.length && !spState.searched) q.focus();
+    }
+
+    function spConnect() {
+      var el = document.getElementById('sp-clientid');
+      var cid = el ? el.value.trim() : sp.clientId;
+      if (!cid) { spState.error = 'Enter your Client ID first.'; renderSpotify(); return; }
+      sp.clientId = cid; spSaveCfg();
+      var verifier = randVerifier();
+      sessionStorage.setItem('sp_verifier', verifier);
+      challenge(verifier).then(function (ch) {
+        location.href = 'https://accounts.spotify.com/authorize?response_type=code&client_id=' +
+          encodeURIComponent(cid) + '&redirect_uri=' + encodeURIComponent(REDIRECT) +
+          '&code_challenge_method=S256&code_challenge=' + ch;
+      });
+    }
+
+    function spHandleRedirect() {
+      var params = new URLSearchParams(location.search);
+      var code = params.get('code');
+      if (!code) return Promise.resolve(false);
+      var verifier = sessionStorage.getItem('sp_verifier');
+      history.replaceState({}, '', REDIRECT);
+      if (!verifier || !sp.clientId) return Promise.resolve(false);
+      return fetch('https://accounts.spotify.com/api/token', {
+        method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ grant_type: 'authorization_code', code: code, redirect_uri: REDIRECT, client_id: sp.clientId, code_verifier: verifier })
+      }).then(function (r) { return r.json(); }).then(function (j) {
+        if (j.access_token) {
+          sp.token = j.access_token; sp.refresh = j.refresh_token || sp.refresh;
+          sp.expiresAt = Date.now() + (j.expires_in * 1000); spSaveCfg();
+          sessionStorage.removeItem('sp_verifier');
+          return true;
+        }
+        return false;
+      }).catch(function () { return false; });
+    }
+
+    function spEnsureToken() {
+      if (sp.token && sp.expiresAt && Date.now() < sp.expiresAt - 5000) return Promise.resolve(sp.token);
+      if (sp.refresh && sp.clientId) {
+        return fetch('https://accounts.spotify.com/api/token', {
+          method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({ grant_type: 'refresh_token', refresh_token: sp.refresh, client_id: sp.clientId })
+        }).then(function (r) { return r.json(); }).then(function (j) {
+          if (j.access_token) { sp.token = j.access_token; if (j.refresh_token) sp.refresh = j.refresh_token; sp.expiresAt = Date.now() + (j.expires_in * 1000); spSaveCfg(); return sp.token; }
+          return null;
+        }).catch(function () { return null; });
+      }
+      return Promise.resolve(null);
+    }
+
+    function spDoSearch() {
+      var el = document.getElementById('sp-q');
+      var q = el ? el.value.trim() : spState.query;
+      spState.query = q;
+      if (!q) return;
+      spState.loading = true; spState.error = ''; spState.searched = true; renderSpotify();
+      spEnsureToken().then(function (token) {
+        if (!token) { spState.loading = false; spState.view = 'connect'; spState.error = 'Please connect Spotify again.'; renderSpotify(); return; }
+        return fetch('https://api.spotify.com/v1/search?type=track&limit=20&q=' + encodeURIComponent(q), {
+          headers: { Authorization: 'Bearer ' + token }
+        }).then(function (r) {
+          if (r.status === 401) { sp.token = null; spSaveCfg(); throw new Error('expired'); }
+          return r.json();
+        }).then(function (j) {
+          var items = (j.tracks && j.tracks.items) || [];
+          spState.results = items.map(function (tk) {
+            return {
+              id: tk.id, track: tk.name,
+              artist: (tk.artists || []).map(function (a) { return a.name; }).join(', '),
+              img: (tk.album && tk.album.images && tk.album.images[0] && tk.album.images[0].url) || null,
+              url: (tk.external_urls && tk.external_urls.spotify) || '',
+              releaseDate: (tk.album && tk.album.release_date) || ''
+            };
+          });
+          spState.loading = false; renderSpotify();
+        });
+      }).catch(function (e) {
+        spState.loading = false;
+        if (e && e.message === 'expired') { spState.view = 'connect'; spState.error = 'Session expired — reconnect.'; }
+        else spState.error = 'Search failed. Check your connection and try again.';
+        renderSpotify();
+      });
+    }
+
+    function spSaveCredit() {
+      var p = spState.picked; if (!p) return;
+      state.data.credits.unshift({
+        id: uid(), track: p.track, artist: p.artist, role: spState.role,
+        img: p.img || null, cover: COVERS[Math.floor(Math.random() * COVERS.length)],
+        url: p.url, releaseDate: p.releaseDate
+      });
+      persist(); closeSpotify(); state.catTab = 'credits'; render();
+    }
+
     /* ---------- events ---------- */
     document.addEventListener('click', function (e) {
-      var el = e.target.closest('[data-nav],[data-open],[data-edit],[data-del],[data-toggle],[data-close],[data-save],[data-chip],[data-swatch],[data-dateset],[data-wzprev],[data-wznext],[data-wzfinish],[data-wzclose],[data-wzcover]');
+      var el = e.target.closest('[data-nav],[data-open],[data-edit],[data-del],[data-toggle],[data-close],[data-save],[data-chip],[data-swatch],[data-dateset],[data-wzprev],[data-wznext],[data-wzfinish],[data-wzclose],[data-wzcover],[data-cattab],[data-sp-connect],[data-sp-search],[data-sp-pick],[data-sp-role],[data-sp-save],[data-sp-back],[data-sp-close],[data-sp-reset]');
       if (!el) return;
 
       if (el.hasAttribute('data-nav')) { state.tab = el.getAttribute('data-nav'); document.getElementById('scroll').scrollTop = 0; render(); return; }
-      if (el.hasAttribute('data-open')) { var ok = el.getAttribute('data-open'); if (ok === 'release') openReleaseWizard(); else openModal(ok); return; }
+      if (el.hasAttribute('data-cattab')) { state.catTab = el.getAttribute('data-cattab'); render(); return; }
+      if (el.hasAttribute('data-open')) { var ok = el.getAttribute('data-open'); if (ok === 'release') openReleaseWizard(); else if (ok === 'spotify') openSpotify(); else openModal(ok); return; }
       if (el.hasAttribute('data-edit')) { var ek = el.getAttribute('data-edit'); if (ek === 'release') openReleaseWizard(el.getAttribute('data-id')); else openModal(ek, el.getAttribute('data-id')); return; }
       if (el.hasAttribute('data-del')) {
         var coll = el.getAttribute('data-del'), id = el.getAttribute('data-id');
@@ -1435,6 +1797,20 @@
       }
       if (el.hasAttribute('data-close')) { closeModal(); return; }
       if (el.hasAttribute('data-save')) { saveModal(); return; }
+      if (el.hasAttribute('data-sp-close')) { closeSpotify(); return; }
+      if (el.hasAttribute('data-sp-connect')) { spConnect(); return; }
+      if (el.hasAttribute('data-sp-search')) { spDoSearch(); return; }
+      if (el.hasAttribute('data-sp-reset')) { sp.token = null; sp.refresh = null; spSaveCfg(); spState.view = 'connect'; spState.error = ''; renderSpotify(); return; }
+      if (el.hasAttribute('data-sp-pick')) { spState.picked = spState.results[Number(el.getAttribute('data-sp-pick'))]; spState.view = 'role'; renderSpotify(); return; }
+      if (el.hasAttribute('data-sp-back')) { spState.view = 'search'; spState.picked = null; renderSpotify(); return; }
+      if (el.hasAttribute('data-sp-role')) {
+        spState.role = el.getAttribute('data-sp-role');
+        var rc = el.parentNode.querySelectorAll('.chip');
+        for (var rk = 0; rk < rc.length; rk++) rc[rk].classList.remove('active');
+        el.classList.add('active');
+        return;
+      }
+      if (el.hasAttribute('data-sp-save')) { spSaveCredit(); return; }
       if (el.hasAttribute('data-wzclose')) { wiz = null; closeModal(); return; }
       if (el.hasAttribute('data-wznext')) { captureWizStep(); wiz.dir = 1; wiz.step++; renderWizard(); return; }
       if (el.hasAttribute('data-wzprev')) { captureWizStep(); wiz.dir = -1; wiz.step--; renderWizard(); return; }
@@ -1489,7 +1865,16 @@
       }
     });
 
-    render();
+    // Enter to search inside the Spotify sheet
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && e.target && e.target.id === 'sp-q') { e.preventDefault(); spDoSearch(); }
+    });
+
+    // Startup: finish a Spotify OAuth redirect if we came back with a code
+    spHandleRedirect().then(function (connected) {
+      render();
+      if (connected) { state.tab = 'catalog'; state.catTab = 'credits'; render(); openSpotify(); }
+    });
   })();
 </script>
 </body>
