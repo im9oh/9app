@@ -1,25 +1,21 @@
-// Small, single-purpose formatting helpers.
+// Small formatting helpers, shared across screens.
 
-export function uid() {
-  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-    return crypto.randomUUID()
-  }
+export function uid(): string {
   return 'id-' + Math.random().toString(36).slice(2) + Date.now().toString(36)
 }
 
-export function formatNumber(n) {
+export function formatNumber(n: number): string {
   return new Intl.NumberFormat('en-US').format(Number(n) || 0)
 }
 
-// Compact form for big counts: 1.2M, 34.5K
-export function formatCompact(n) {
+export function formatCompact(n: number): string {
   return new Intl.NumberFormat('en-US', {
     notation: 'compact',
     maximumFractionDigits: 1,
   }).format(Number(n) || 0)
 }
 
-export function formatMoney(n) {
+export function formatMoney(n: number): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -27,10 +23,10 @@ export function formatMoney(n) {
   }).format(Number(n) || 0)
 }
 
-export function formatDate(iso) {
+export function formatDate(iso: string): string {
   if (!iso) return '—'
-  const d = new Date(iso + (iso.length === 10 ? 'T00:00:00' : ''))
-  if (isNaN(d)) return '—'
+  const d = new Date(iso.length === 10 ? iso + 'T00:00:00' : iso)
+  if (isNaN(d.getTime())) return iso
   return d.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -38,17 +34,25 @@ export function formatDate(iso) {
   })
 }
 
-export function todayISO() {
+export function todayISO(): string {
   return new Date().toISOString().slice(0, 10)
 }
 
-// Human relative label for a due/target date.
-export function relativeDay(iso) {
+export function addDaysISO(iso: string, days: number): string {
+  const d = new Date((iso || todayISO()) + 'T00:00:00')
+  d.setDate(d.getDate() + days)
+  return d.toISOString().slice(0, 10)
+}
+
+export type Rel = { label: string; tone: 'soon' | 'past' | 'future' }
+
+export function relativeDay(iso: string): Rel | null {
   if (!iso) return null
   const target = new Date(iso + 'T00:00:00')
+  if (isNaN(target.getTime())) return null
   const now = new Date()
   now.setHours(0, 0, 0, 0)
-  const days = Math.round((target - now) / 86400000)
+  const days = Math.round((target.getTime() - now.getTime()) / 86400000)
   if (days === 0) return { label: 'Today', tone: 'soon' }
   if (days === 1) return { label: 'Tomorrow', tone: 'soon' }
   if (days === -1) return { label: 'Yesterday', tone: 'past' }
