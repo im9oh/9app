@@ -1205,8 +1205,23 @@
       });
       return d;
     }
-    function persist() { try { localStorage.setItem(KEY, JSON.stringify(state.data)); } catch (e) {} }
+    function persist() { try { localStorage.setItem(KEY, JSON.stringify(state.data)); } catch (e) {} scheduleNativeNotifications(); }
     state.data = loadState();
+
+    /* ---------- native shell bridge: local notifications ---------- */
+    var PROJECT_ID = 'studio-nine';
+    var NATIVE = !!(window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.shell);
+    function scheduleNativeNotifications() {
+      if (!NATIVE) return;
+      var items = [];
+      state.data.reminders.forEach(function (r) {
+        if (r.done || !r.due) return;
+        items.push({ id: 'rem-' + r.id, title: 'Reminder due', body: r.text, at: r.due + 'T09:00' });
+      });
+      // Weekly recap — Mondays 9am (2020-01-06 is a Monday; only weekday/time are used).
+      items.push({ id: 'weekly-recap', title: 'Your weekly recap 🎧', body: 'Open Studio Nine for this week’s streams, income, and what’s due.', at: '2020-01-06T09:00', repeat: 'weekly' });
+      try { window.webkit.messageHandlers.shell.postMessage({ type: 'scheduleNotifications', project: PROJECT_ID, items: items }); } catch (e) {}
+    }
 
     /* ---------- screens ---------- */
     function pageHead(title, sub, actionLabel, actionAttr) {
@@ -1593,7 +1608,7 @@
     }
 
     /* ---------- Spotify search → add credit ---------- */
-    var BUILD = 'v10';
+    var BUILD = 'v11';
     var SP_KEY = 'studio9-spotify';
     var REDIRECT = (location.origin && location.origin !== 'null')
       ? location.origin + location.pathname
@@ -1911,6 +1926,7 @@
     // Startup: finish a Spotify OAuth redirect if we came back with a code
     spHandleRedirect().then(function (connected) {
       render();
+      scheduleNativeNotifications();
       if (connected) { state.tab = 'catalog'; state.catTab = 'credits'; render(); openSpotify(); }
     });
   })();

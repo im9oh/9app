@@ -1,0 +1,12 @@
+{
+  "projects": [
+    {
+      "id": "studio-nine",
+      "name": "Studio Nine",
+      "subtitle": "Music production HQ",
+      "emoji": "🎛️",
+      "color": "#8b5cf6",
+      "url": "https://im9oh.github.io/9app/"
+    }
+  ]
+}
