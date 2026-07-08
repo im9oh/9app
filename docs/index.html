@@ -1667,7 +1667,7 @@
               '<div class="r-meta"><div class="r-name">' + esc(r.track) + '</div><div class="r-artist">' + esc(r.artist) + '</div></div>' +
               '<span class="icon-btn" style="color:var(--accent-300)">' + icon('plus', 18) + '</span></div>';
           }).join('') + '</div>';
-        } else if (spState.searched) results = '<div class="sp-empty">No tracks found. Try another search.</div>';
+        } else if (spState.searched) results = '<div class="sp-empty">No tracks found' + (spState.lastStatus ? ' (HTTP ' + spState.lastStatus + ')' : '') + '. Try another search.</div>';
         else results = '<div class="sp-empty">Search Spotify by song or artist.</div>';
 
         html = '<h2><span class="sp-brand" style="margin:0">' + icon('spotify', 17, '#1ed760', 2) + 'Spotify</span></h2>' +
@@ -1743,10 +1743,17 @@
         return fetch('https://api.spotify.com/v1/search?type=track&limit=20&q=' + encodeURIComponent(q), {
           headers: { Authorization: 'Bearer ' + token }
         }).then(function (r) {
-          if (r.status === 401) { sp.token = null; spSaveCfg(); throw new Error('expired'); }
-          return r.json();
-        }).then(function (j) {
-          var items = (j.tracks && j.tracks.items) || [];
+          return r.text().then(function (txt) {
+            var j = {}; try { j = JSON.parse(txt); } catch (e) {}
+            return { status: r.status, j: j };
+          });
+        }).then(function (res) {
+          if (res.status === 401) { sp.token = null; spSaveCfg(); throw new Error('expired'); }
+          if (res.status < 200 || res.status >= 300) {
+            var m = (res.j && res.j.error && res.j.error.message) || ('HTTP ' + res.status);
+            throw new Error('api:' + res.status + ' — ' + m);
+          }
+          var items = (res.j.tracks && res.j.tracks.items) || [];
           spState.results = items.map(function (tk) {
             return {
               id: tk.id, track: tk.name,
@@ -1756,12 +1763,15 @@
               releaseDate: (tk.album && tk.album.release_date) || ''
             };
           });
-          spState.loading = false; renderSpotify();
+          spState.lastStatus = res.status;
+          spState.loading = false; spState.error = ''; renderSpotify();
         });
       }).catch(function (e) {
         spState.loading = false;
-        if (e && e.message === 'expired') { spState.view = 'connect'; spState.error = 'Session expired — reconnect.'; }
-        else spState.error = 'Search failed. Check your connection and try again.';
+        var msg = (e && e.message) || '';
+        if (msg === 'expired') { spState.view = 'connect'; spState.error = 'Session expired — reconnect.'; }
+        else if (msg.indexOf('api:') === 0) { spState.error = 'Spotify says ' + msg.slice(4); }
+        else spState.error = 'Search failed (network/CORS): ' + msg;
         renderSpotify();
       });
     }
