@@ -1188,8 +1188,8 @@
         { id: 'v2', destination: 'Los Angeles, US', purpose: 'Sync licensing meetings', start: addDays(t, 35), end: addDays(t, 39), notes: 'Meet with 2 music supervisors. Book AirBnB near Silver Lake.' }
       ],
       credits: [
-        { id: 'c1', track: 'Golden Hour', artist: 'Mara Vell', role: 'Producer', img: null, cover: '#f59e0b', url: '', releaseDate: addDays(t, -152) },
-        { id: 'c2', track: 'Static Bloom', artist: 'KODE', role: 'Mixing', img: null, cover: '#38bdf8', url: '', releaseDate: addDays(t, -47) }
+        { id: 'c1', track: 'Golden Hour', artist: 'Mara Vell', role: 'Producer', img: null, cover: '#f59e0b', url: '', releaseDate: addDays(t, -152), streams: 1284000 },
+        { id: 'c2', track: 'Static Bloom', artist: 'KODE', role: 'Mixing', img: null, cover: '#38bdf8', url: '', releaseDate: addDays(t, -47), streams: 342500 }
       ]
     };
 
@@ -1223,18 +1223,18 @@
 
     function viewHome() {
       var d = state.data;
-      var totalStreams = d.releases.reduce(function (s, r) { return s + (+r.streams || 0); }, 0);
+      var totalStreams = d.credits.reduce(function (s, c) { return s + (+c.streams || 0); }, 0);
       var mkey = todayISO().slice(0, 7);
       var monthInc = d.income.filter(function (i) { return (i.date || '').slice(0, 7) === mkey; }).reduce(function (s, i) { return s + (+i.amount || 0); }, 0);
       var open = d.reminders.filter(function (r) { return !r.done; });
       var trips = d.trips.filter(function (x) { return (x.end || x.start) >= todayISO(); }).sort(function (a, b) { return a.start < b.start ? -1 : 1; });
-      var top = d.releases.slice().sort(function (a, b) { return (b.streams || 0) - (a.streams || 0); }).slice(0, 5);
-      var max = Math.max(1, Math.max.apply(null, top.map(function (r) { return r.streams; })));
+      var top = d.credits.slice().sort(function (a, b) { return (b.streams || 0) - (a.streams || 0); }).slice(0, 5);
+      var max = Math.max(1, Math.max.apply(null, top.map(function (c) { return c.streams || 0; })));
       var hr = new Date().getHours();
       var greet = hr < 12 ? 'Good morning' : hr < 18 ? 'Good afternoon' : 'Good evening';
 
       var tiles = [
-        { ic: 'play', tint: 'var(--accent-400)', val: nf(totalStreams), lbl: 'Total streams', sub: 'Across ' + d.releases.length + ' releases' },
+        { ic: 'play', tint: 'var(--accent-400)', val: nf(totalStreams), lbl: 'Total streams', sub: 'Across ' + d.credits.length + ' credits' },
         { ic: 'wallet', tint: 'var(--emerald)', val: money(monthInc), lbl: 'Income this month', sub: d.income.length + ' entries' },
         { ic: 'list', tint: 'var(--accent-400)', val: open.length, lbl: 'Open reminders', sub: open.length ? 'Due soon below' : 'All caught up' },
         { ic: 'plane', tint: 'var(--sky)', val: trips.length, lbl: 'Upcoming trips', sub: trips[0] ? trips[0].destination : 'None planned' }
@@ -1244,11 +1244,11 @@
           '<div class="lbl">' + x.lbl + '</div><div class="sub">' + x.sub + '</div></div>';
       }).join('');
 
-      var bars = top.length ? top.map(function (r) {
-        return '<div class="barrow"><div class="top"><div class="name">' + esc(r.title) + '</div>' +
-          '<div class="num">' + compact(r.streams) + '</div></div>' +
-          '<div class="track"><div class="fill" style="width:' + (r.streams / max * 100) + '%"></div></div></div>';
-      }).join('') : '<div class="muted">Add releases to see your streams.</div>';
+      var bars = top.length ? top.map(function (c) {
+        return '<div class="barrow"><div class="top"><div class="name">' + esc(c.track) + '</div>' +
+          '<div class="num">' + compact(c.streams || 0) + '</div></div>' +
+          '<div class="track"><div class="fill" style="width:' + ((c.streams || 0) / max * 100) + '%"></div></div></div>';
+      }).join('') : '<div class="muted">Add credits to see your streams.</div>';
 
       var due = open.length ? open.slice(0, 5).map(function (r) {
         var rl = rel(r.due);
@@ -1267,7 +1267,7 @@
         '<div class="pg-head"><div><h1 class="pg-title">Your <span class="accent">production HQ</span></h1>' +
         '<p class="pg-sub">' + greet + ' 👋</p></div></div>' +
         '<div class="tiles">' + tiles + '</div>' +
-        '<div class="card" style="margin-top:12px"><div class="sec-head"><div class="left">' + icon('disc', 16) + 'Top releases by streams</div>' +
+        '<div class="card" style="margin-top:12px"><div class="sec-head"><div class="left">' + icon('disc', 16) + 'Top credits by streams</div>' +
         '<button class="view-all" data-nav="catalog">View all ›</button></div><div class="stack" style="margin-top:14px">' + bars + '</div></div>' +
         '<div class="card" style="margin-top:12px"><div class="sec-head"><div class="left">' + icon('list', 16) + 'Due soon</div>' +
         '<button class="view-all" data-nav="reminders">View all ›</button></div><div class="stack" style="margin-top:12px">' + due + '</div></div>' +
@@ -1282,48 +1282,32 @@
       return '<div class="cover" style="width:' + size + 'px;height:' + size + 'px;background:' + (c.cover || '#8b5cf6') + '">' + icon('music', size * 0.4, '#fff', 2) + '</div>';
     }
 
+    function creditsTotalStreams() {
+      return state.data.credits.reduce(function (s, c) { return s + (+c.streams || 0); }, 0);
+    }
+
     function viewCatalog() {
       var d = state.data;
-      var seg = state.catTab;
-      var total = d.releases.reduce(function (s, r) { return s + (+r.streams || 0); }, 0);
+      var total = creditsTotalStreams();
+      var sub = d.credits.length + ' credit' + (d.credits.length === 1 ? '' : 's') + ' · ' + nf(total) + ' streams';
 
-      var segCtl = '<div class="seg"><button class="seg-btn' + (seg === 'singles' ? ' on' : '') + '" data-cattab="singles">Singles</button>' +
-        '<button class="seg-btn' + (seg === 'credits' ? ' on' : '') + '" data-cattab="credits">Credits</button></div>';
+      var list = d.credits.length === 0
+        ? empty('music', 'No credits yet', 'Search Spotify to add songs you produced, wrote, mixed, or featured on — then log their total streams.', 'Search Spotify', 'data-open="spotify"')
+        : '<div class="stack">' + d.credits.slice().sort(function (a, b) { return (b.streams || 0) - (a.streams || 0); }).map(function (c) {
+          return '<div class="card rel">' + creditCover(c) +
+            '<div class="meta"><div class="t-row"><div class="name">' + esc(c.track) + '</div>' + badge(c.role, 'var(--accent-400)') + '</div>' +
+            '<div class="date">' + esc(c.artist) + (c.releaseDate ? ' · ' + fmtDate(c.releaseDate) : '') + '</div>' +
+            '<div class="streams">' + compact(c.streams || 0) + ' <span>streams</span></div></div>' +
+            '<div class="row-actions">' +
+            '<button class="icon-btn" data-editcredit="' + c.id + '" aria-label="Edit">' + icon('pencil', 16) + '</button>' +
+            '<button class="icon-btn danger" data-del="credits" data-id="' + c.id + '" aria-label="Delete">' + icon('trash', 16) + '</button></div></div>';
+        }).join('') + '</div>';
 
-      var body, sub, actionAttr;
-      if (seg === 'singles') {
-        actionAttr = 'data-open="release"';
-        sub = d.releases.length + ' singles · ' + nf(total) + ' streams';
-        var sorted = d.releases.slice().sort(function (a, b) { return (b.streams || 0) - (a.streams || 0); });
-        var list = d.releases.length === 0
-          ? empty('disc', 'No singles yet', 'Add your singles to track total streams across your whole catalog.', 'Add your first single', 'data-open="release"')
-          : '<div class="stack">' + sorted.map(function (r) {
-            return '<div class="card rel"><div class="cover" style="background:' + r.cover + '">' + icon('disc', 22, '#fff', 2) + '</div>' +
-              '<div class="meta"><div class="t-row"><div class="name">' + esc(r.title) + '</div></div>' +
-              '<div class="date">Released ' + fmtDate(r.releaseDate) + '</div>' +
-              '<div class="streams">' + compact(r.streams) + ' <span>streams</span></div></div>' +
-              '<div class="row-actions"><button class="icon-btn" data-edit="release" data-id="' + r.id + '">' + icon('pencil', 16) + '</button>' +
-              '<button class="icon-btn danger" data-del="releases" data-id="' + r.id + '">' + icon('trash', 16) + '</button></div></div>';
-          }).join('') + '</div>';
-        body = '<div class="card hero" style="margin:0 0 14px"><div class="ico">' + icon('play', 20) + '</div>' +
-          '<div><div class="lbl">Total streams across catalog</div><div class="big">' + nf(total) + '</div></div></div>' + list;
-      } else {
-        actionAttr = 'data-open="spotify"';
-        sub = d.credits.length + ' production credit' + (d.credits.length === 1 ? '' : 's');
-        var cr = d.credits.slice();
-        body = d.credits.length === 0
-          ? empty('music', 'No credits yet', 'Search Spotify to add songs you produced, wrote, mixed, or featured on.', 'Search Spotify', 'data-open="spotify"')
-          : '<div class="stack">' + cr.map(function (c) {
-            return '<div class="card rel">' + creditCover(c) +
-              '<div class="meta"><div class="t-row"><div class="name">' + esc(c.track) + '</div>' + badge(c.role, 'var(--accent-400)') + '</div>' +
-              '<div class="date">' + esc(c.artist) + (c.releaseDate ? ' · ' + fmtDate(c.releaseDate) : '') + '</div></div>' +
-              '<div class="row-actions">' +
-              (c.url ? '<a class="icon-btn" href="' + esc(c.url) + '" target="_blank" rel="noopener" aria-label="Open in Spotify">' + icon('external', 15) + '</a>' : '') +
-              '<button class="icon-btn danger" data-del="credits" data-id="' + c.id + '">' + icon('trash', 16) + '</button></div></div>';
-          }).join('') + '</div>';
-      }
+      var hero = d.credits.length === 0 ? '' :
+        '<div class="card hero" style="margin:0 0 14px"><div class="ico">' + icon('play', 20) + '</div>' +
+        '<div><div class="lbl">Total streams across all credits</div><div class="big">' + nf(total) + '</div></div></div>';
 
-      return '<div class="view">' + pageHead('Catalog', sub, 'Add', actionAttr) + segCtl + body + '</div>';
+      return '<div class="view">' + pageHead('Credits', sub, 'Add', 'data-open="spotify"') + hero + list + '</div>';
     }
 
     function viewIncome() {
@@ -1406,7 +1390,7 @@
     var VIEWS = { home: viewHome, catalog: viewCatalog, income: viewIncome, reminders: viewReminders, travel: viewTravel };
     var TABS = [
       { id: 'home', label: 'Home', ic: 'home' },
-      { id: 'catalog', label: 'Catalog', ic: 'disc' },
+      { id: 'catalog', label: 'Credits', ic: 'music' },
       { id: 'income', label: 'Income', ic: 'wallet' },
       { id: 'reminders', label: 'Reminders', ic: 'list' },
       { id: 'travel', label: 'Travel', ic: 'plane' }
@@ -1609,7 +1593,7 @@
     }
 
     /* ---------- Spotify search → add credit ---------- */
-    var BUILD = 'v9';
+    var BUILD = 'v10';
     var SP_KEY = 'studio9-spotify';
     var REDIRECT = (location.origin && location.origin !== 'null')
       ? location.origin + location.pathname
@@ -1656,6 +1640,7 @@
           '<div class="field"><label>Your role</label><div class="chips" data-chipgroup="sp-role">' +
           ROLES.map(function (r) { return '<button type="button" class="chip' + (r === spState.role ? ' active' : '') + '" data-sp-role="' + r + '">' + r + '</button>'; }).join('') +
           '</div></div>' +
+          '<div class="field"><label>Streams — all platforms</label><input class="input" id="sp-streams" value="" placeholder="e.g. 250000" inputmode="numeric"><div class="wz-hint" style="margin-top:8px">From your distributor or Spotify for Artists — you can update it anytime.</div></div>' +
           '<div class="wz-foot"><button class="btn btn-ghost btn-back" data-sp-back>Back</button>' +
           '<button class="btn btn-primary" data-sp-save>Add credit</button></div>';
       } else {
@@ -1779,17 +1764,49 @@
 
     function spSaveCredit() {
       var p = spState.picked; if (!p) return;
+      var sel = document.getElementById('sp-streams');
       state.data.credits.unshift({
         id: uid(), track: p.track, artist: p.artist, role: spState.role,
         img: p.img || null, cover: COVERS[Math.floor(Math.random() * COVERS.length)],
-        url: p.url, releaseDate: p.releaseDate
+        url: p.url, releaseDate: p.releaseDate,
+        streams: sel ? (Number(sel.value) || 0) : 0
       });
       persist(); closeSpotify(); state.catTab = 'credits'; render();
     }
 
+    /* ---------- edit a credit (role + streams) ---------- */
+    var credEdit = null;
+    function openCreditEdit(id) {
+      var c = state.data.credits.filter(function (x) { return x.id === id; })[0];
+      if (!c) return;
+      credEdit = { id: id, role: c.role };
+      state.modal = { kind: 'crededit' };
+      document.getElementById('modal-root').innerHTML =
+        '<div class="backdrop" data-ce-close></div><div class="sheet" role="dialog" aria-modal="true">' +
+        '<div class="wz-top"><div></div><button class="wz-x" data-ce-close aria-label="Close">×</button></div>' +
+        '<h2>Edit credit</h2>' +
+        '<div class="sp-picked">' + creditCover(c, 52) +
+        '<div style="min-width:0"><div class="r-name" style="font-size:15px;font-weight:700;color:#fff">' + esc(c.track) + '</div>' +
+        '<div class="r-artist" style="color:var(--text-faint);font-size:13px;margin-top:2px">' + esc(c.artist) + '</div></div></div>' +
+        '<div class="field"><label>Your role</label><div class="chips" data-chipgroup="ce-role">' +
+        ROLES.map(function (r) { return '<button type="button" class="chip' + (r === c.role ? ' active' : '') + '" data-ce-role="' + r + '">' + r + '</button>'; }).join('') +
+        '</div></div>' +
+        '<div class="field"><label>Streams — all platforms</label><input class="input" id="ce-streams" value="' + (c.streams || '') + '" placeholder="e.g. 250000" inputmode="numeric"></div>' +
+        '<div class="wz-foot"><button class="btn btn-ghost btn-back" data-ce-close>Cancel</button>' +
+        '<button class="btn btn-primary" data-ce-save>Save</button></div></div>';
+    }
+    function saveCreditEdit() {
+      var el = document.getElementById('ce-streams');
+      var streams = el ? (Number(el.value) || 0) : 0;
+      state.data.credits = state.data.credits.map(function (x) {
+        return x.id === credEdit.id ? Object.assign({}, x, { role: credEdit.role, streams: streams }) : x;
+      });
+      persist(); credEdit = null; state.modal = null; document.getElementById('modal-root').innerHTML = ''; render();
+    }
+
     /* ---------- events ---------- */
     document.addEventListener('click', function (e) {
-      var el = e.target.closest('[data-nav],[data-open],[data-edit],[data-del],[data-toggle],[data-close],[data-save],[data-chip],[data-swatch],[data-dateset],[data-wzprev],[data-wznext],[data-wzfinish],[data-wzclose],[data-wzcover],[data-cattab],[data-sp-connect],[data-sp-search],[data-sp-pick],[data-sp-role],[data-sp-save],[data-sp-back],[data-sp-close],[data-sp-reset]');
+      var el = e.target.closest('[data-nav],[data-open],[data-edit],[data-del],[data-toggle],[data-close],[data-save],[data-chip],[data-swatch],[data-dateset],[data-wzprev],[data-wznext],[data-wzfinish],[data-wzclose],[data-wzcover],[data-cattab],[data-sp-connect],[data-sp-search],[data-sp-pick],[data-sp-role],[data-sp-save],[data-sp-back],[data-sp-close],[data-sp-reset],[data-editcredit],[data-ce-close],[data-ce-role],[data-ce-save]');
       if (!el) return;
 
       if (el.hasAttribute('data-nav')) { state.tab = el.getAttribute('data-nav'); document.getElementById('scroll').scrollTop = 0; render(); return; }
@@ -1822,6 +1839,16 @@
         return;
       }
       if (el.hasAttribute('data-sp-save')) { spSaveCredit(); return; }
+      if (el.hasAttribute('data-editcredit')) { openCreditEdit(el.getAttribute('data-editcredit')); return; }
+      if (el.hasAttribute('data-ce-close')) { credEdit = null; state.modal = null; document.getElementById('modal-root').innerHTML = ''; return; }
+      if (el.hasAttribute('data-ce-save')) { saveCreditEdit(); return; }
+      if (el.hasAttribute('data-ce-role')) {
+        credEdit.role = el.getAttribute('data-ce-role');
+        var crc = el.parentNode.querySelectorAll('.chip');
+        for (var ci = 0; ci < crc.length; ci++) crc[ci].classList.remove('active');
+        el.classList.add('active');
+        return;
+      }
       if (el.hasAttribute('data-wzclose')) { wiz = null; closeModal(); return; }
       if (el.hasAttribute('data-wznext')) { captureWizStep(); wiz.dir = 1; wiz.step++; renderWizard(); return; }
       if (el.hasAttribute('data-wzprev')) { captureWizStep(); wiz.dir = -1; wiz.step--; renderWizard(); return; }
