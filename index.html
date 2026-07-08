@@ -1609,6 +1609,7 @@
     }
 
     /* ---------- Spotify search → add credit ---------- */
+    var BUILD = 'v9';
     var SP_KEY = 'studio9-spotify';
     var REDIRECT = (location.origin && location.origin !== 'null')
       ? location.origin + location.pathname
@@ -1670,7 +1671,7 @@
         } else if (spState.searched) results = '<div class="sp-empty">No tracks found' + (spState.lastStatus ? ' (HTTP ' + spState.lastStatus + ')' : '') + '. Try another search.</div>';
         else results = '<div class="sp-empty">Search Spotify by song or artist.</div>';
 
-        html = '<h2><span class="sp-brand" style="margin:0">' + icon('spotify', 17, '#1ed760', 2) + 'Spotify</span></h2>' +
+        html = '<h2><span class="sp-brand" style="margin:0">' + icon('spotify', 17, '#1ed760', 2) + 'Spotify</span> <span style="color:var(--text-ghost);font-size:11px;font-weight:600">build ' + BUILD + '</span></h2>' +
           '<div class="sp-q-row"><input class="input" id="sp-q" value="' + esc(spState.query) + '" placeholder="Search a song or artist…" autocomplete="off">' +
           '<button class="btn btn-primary" data-sp-search>' + icon('search', 16, '#fff', 2.4) + '</button></div>' +
           results +
@@ -1770,8 +1771,8 @@
         spState.loading = false;
         var msg = (e && e.message) || '';
         if (msg === 'expired') { spState.view = 'connect'; spState.error = 'Session expired — reconnect.'; }
-        else if (msg.indexOf('api:') === 0) { spState.error = 'Spotify says ' + msg.slice(4); }
-        else spState.error = 'Search failed (network/CORS): ' + msg;
+        else if (msg.indexOf('api:') === 0) { spState.error = 'Spotify says ' + msg.slice(4) + ' · build ' + BUILD; }
+        else spState.error = 'Search failed (network/CORS): ' + msg + ' · build ' + BUILD;
         renderSpotify();
       });
     }
