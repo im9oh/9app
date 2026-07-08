@@ -1740,7 +1740,7 @@
       spState.loading = true; spState.error = ''; spState.searched = true; renderSpotify();
       spEnsureToken().then(function (token) {
         if (!token) { spState.loading = false; spState.view = 'connect'; spState.error = 'Please connect Spotify again.'; renderSpotify(); return; }
-        return fetch('https://api.spotify.com/v1/search?type=track&limit=20&q=' + encodeURIComponent(q), {
+        return fetch('https://api.spotify.com/v1/search?type=track&q=' + encodeURIComponent(q), {
           headers: { Authorization: 'Bearer ' + token }
         }).then(function (r) {
           return r.text().then(function (txt) {
@@ -1753,7 +1753,7 @@
             var m = (res.j && res.j.error && res.j.error.message) || ('HTTP ' + res.status);
             throw new Error('api:' + res.status + ' — ' + m);
           }
-          var items = (res.j.tracks && res.j.tracks.items) || [];
+          var items = ((res.j.tracks && res.j.tracks.items) || []).slice(0, 20);
           spState.results = items.map(function (tk) {
             return {
               id: tk.id, track: tk.name,
